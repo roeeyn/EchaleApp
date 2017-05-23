@@ -4,6 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Echale.iml" filepath="$PROJECT_DIR$/Echale.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/guillotinemenu/guillotinemenu.iml" filepath="$PROJECT_DIR$/guillotinemenu/guillotinemenu.iml" />
+      <module fileurl="file://$PROJECT_DIR$/steppertouch/steppertouch.iml" filepath="$PROJECT_DIR$/steppertouch/steppertouch.iml" />
+      <module fileurl="file://$PROJECT_DIR$/taptargetview/taptargetview.iml" filepath="$PROJECT_DIR$/taptargetview/taptargetview.iml" />
     </modules>
   </component>
 </project>
