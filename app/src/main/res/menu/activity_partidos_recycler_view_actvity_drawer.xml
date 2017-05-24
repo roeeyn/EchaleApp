@@ -4,20 +4,25 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_person_black_24dp"
             android:title="Perfil" />
         <item
             android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_update_black_24dp"
             android:title="Historial" />
         <item
             android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Apuestas Hechas" />
+            android:icon="@drawable/ic_cards_black_24dp"
+            android:title="Apuestas" />
+
+        <item
+            android:id="@+id/nav_creditos"
+            android:icon="@drawable/ic_coin_black_24dp"
+            android:title="Créditos" />
         <item
             android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Otra Opcion" />
+            android:icon="@drawable/ic_help_circle_black_24dp"
+            android:title="Ayuda" />
     </group>
 
 </menu>
