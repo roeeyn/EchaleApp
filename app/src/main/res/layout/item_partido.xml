@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="15dp"
+        app:cardCornerRadius="3dp"
+        app:cardElevation="6dp"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <!-- Parte de arribo -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:orientation="horizontal"
+                android:background="#e7e7e7"
+                android:padding="8dp"
+                >
+
+                <!-- Equipo A -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:orientation="vertical"
+                    >
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/local_team_image"
+                        android:src="@mipmap/ic_launcher"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="7"
+                        app:civ_border_width="2dp"
+                        app:civ_border_color="#000"/>
+
+                    <TextView
+                        android:id="@+id/local_team_name"
+                        android:layout_width="match_parent"
+                        android:text="Equipo_A"
+                        android:textAlignment="center"
+                        android:layout_height="0dp"
+                        android:layout_weight="3"
+                        />
+
+                </LinearLayout>
+
+                <!-- Titulo -->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:padding="2dp"
+                    android:layout_gravity="center"
+                    android:textSize="20sp"
+                    android:text="VS"
+                    android:gravity="center"
+                    />
+
+                <!-- Equipo B -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:orientation="vertical"
+                    >
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:src="@mipmap/ic_launcher"
+                        android:id="@+id/away_team_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="7"
+                        app:civ_border_width="2dp"
+                        app:civ_border_color="#000"/>
+
+                    <TextView
+                        android:id="@+id/away_team_name"
+                        android:layout_width="match_parent"
+                        android:text="Equipo_b"
+                        android:textAlignment="center"
+                        android:layout_height="0dp"
+                        android:layout_weight="3"
+                        />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Descripción -->
+            <!--<TextView-->
+                <!--android:id="@+id/item_promo_tv_descripcion"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="110dp"-->
+                <!--android:padding="8dp"-->
+                <!--android:maxLines="5"-->
+                <!--android:textSize="13sp"-->
+                <!--/>-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+            >
+                <TextView
+                    android:id="@+id/match_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:text="Fecha"
+                    android:textSize="13sp"
+                    android:padding="8dp"
+                    android:maxLines="2"
+                    />
+                <TextView
+                    android:id="@+id/match_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:text="Hora"
+                    android:textSize="13sp"
+                    android:padding="8dp"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+
+</LinearLayout>
