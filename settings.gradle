@@ -1,1 +1,1 @@
-include ':app', ':steppertouch', ':guillotinemenu', ':taptargetview'
+include ':app', ':steppertouch', ':guillotinemenu', ':taptargetview' , ':login.2'
