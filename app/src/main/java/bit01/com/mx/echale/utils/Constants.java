@@ -16,4 +16,5 @@ public class Constants {
     public static final String TAG_AWAY_IMAGE = "AWAYIMAGE";
 
 
+    public static final String GOOGLE_CHOOSER = "1";
 }

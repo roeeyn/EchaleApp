@@ -1,10 +1,13 @@
 package bit01.com.mx.echale.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,12 +17,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import bit01.com.mx.echale.R;
 import bit01.com.mx.echale.models.Partido;
+import bit01.com.mx.echale.utils.Constants;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class PartidosRecyclerViewActvity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -47,6 +62,10 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_partidos_recycler_view_actvity);
+
+        ButterKnife.bind(this);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -65,6 +84,7 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
 
 
     }
+
 
     public void settingRecyclerView(){
 
@@ -99,11 +119,19 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.sign_out_button) {
+            //FirebaseAuth.getInstance().signOut();
+            signOut();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void signOut(){
+        FirebaseAuth.getInstance().signOut();
+        Log.d(Constants.LOG_TAG, "Signed out successfully!");
+        startActivity(new Intent(PartidosRecyclerViewActvity.this, Login.class));
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -126,4 +154,6 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }

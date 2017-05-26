@@ -1,6 +1,8 @@
 package bit01.com.mx.echale.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +18,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -23,6 +27,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.io.Serializable;
 
 import bit01.com.mx.echale.R;
 import bit01.com.mx.echale.utils.Constants;
@@ -32,16 +38,21 @@ import butterknife.OnClick;
 
 public class Login extends AppCompatActivity {
 
+    // Google sign in variables
     private SignInButton mGoogleBtn;
     private GoogleApiClient mGoogleApiClient;
+
+    // Firebase variables
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    @BindView(R.id.email)
-    EditText etUser;
+    private ProgressDialog mProgressDialog;
 
-    @BindView(R.id.password)
-    EditText etPassword;
+    @BindView(R.id.login_input_email)
+    EditText inputEmailText;
+
+    @BindView(R.id.login_input_password)
+    EditText inputPasswordText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,22 +62,16 @@ public class Login extends AppCompatActivity {
         // Inicialización de ButterKnife
         ButterKnife.bind(this);
 
-        // Obtenemos una instancia de Firebase
-        mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                // Comprobamos si tenemos un usuario cargado
-                Log.e("myLog", firebaseAuth.getCurrentUser().toString());
-                if(firebaseAuth.getCurrentUser() != null) {
-                    // Lanzamos la actividad que contiene el menú principal
-                    startActivity(new Intent(Login.this, PartidosRecyclerViewActvity.class));
-                }
-            }
-        };
+        mProgressDialog = new ProgressDialog(Login.this);
 
+        // Button bind to the view
         mGoogleBtn = (SignInButton) findViewById(R.id.sign_in_button);
+
+        // Tomamos la instancia de Firebase
+        mAuth = FirebaseAuth.getInstance();
+
         // Configuración de Google Sign In
+        // Se obtiene el id del cliente para crear el objeto de opciones
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -84,6 +89,11 @@ public class Login extends AppCompatActivity {
                 .build();
 
 
+        /**
+         * Cuando cerramos la apliación se inicializa este método
+         * verificamos si ya se ha iniciado sesión antes, de ser así
+         * mostramos la lista de partidos.
+         */
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -91,14 +101,17 @@ public class Login extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     Log.d("myLog", "onAuthStateChanged:signed_in:" + user.getUid());
+                    // Show the recycler view of the matches.
+
+                    startActivity(new Intent(Login.this, PartidosRecyclerViewActvity.class));
                 } else {
                     // User is signed out
+                    // Don't do nothing, just show the Login activity.
                     Log.d("myLog", "onAuthStateChanged:signed_out");
                 }
                 // ...
             }
         };
-
 
 
         // Al presionar el botón de Google Sign In
@@ -108,24 +121,45 @@ public class Login extends AppCompatActivity {
                 signIn();
             }
         });
-
     }
 
-    public boolean checarDatosVacios(){
+    @OnClick(R.id.email_login_button)
+    public void emailSignIn(){
+        userLogin();
+    }
 
-        if(!etUser.getText().toString().isEmpty() && !etPassword.getText().toString().isEmpty()){
+    private void userLogin() {
+        final String email = inputEmailText.getText().toString().trim();
+        String password = inputPasswordText.getText().toString().trim();
+        if( email.isEmpty() ){
+            Toast.makeText( Login.this , "El input correo no puede estar vacío", Toast.LENGTH_LONG).show();
+        }else if( password.isEmpty() ){
+            Toast.makeText( Login.this , "El input password no puede estar vacío", Toast.LENGTH_LONG).show();
+        }else {
 
-            return true;
+            mProgressDialog.setTitle("Iniciando sesión");
+            mProgressDialog.setMessage("Esta acción puede tomar algunos segundos..");
+            mProgressDialog.show();
 
-        }else{
-
-            Toast.makeText(Login.this, "Ingresa todos los datos", Toast.LENGTH_SHORT).show();
-            return false;
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if ( task.isSuccessful() ){
+                                // para el intent es this y a cual activity va con terminación.class
+                                mProgressDialog.hide();
+                                Intent intent = new Intent(Login.this, PartidosRecyclerViewActvity.class);
+                                intent.putExtra("UserEmail", email);
+                                startActivity(intent);
+                            }else{
+                                mProgressDialog.hide();
+                                Toast.makeText(Login.this, "Intenta registarte", Toast.LENGTH_SHORT).show();;
+                            }
+                        }
+                    });
 
         }
-
     }
-
 
     @Override
     protected void onStart() {
@@ -141,11 +175,19 @@ public class Login extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        FirebaseAuth.getInstance().signOut();
+    }
+
+    // Método para inicio de sesión con Google
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, Constants.RC_SIGN_IN);
     }
 
+    // Método para recibir el resultado de la acción de SignIn()
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -153,16 +195,20 @@ public class Login extends AppCompatActivity {
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         Log.d(Constants.LOG_TAG, requestCode + "");
 
+        // RequestCode tiene que ser 9001
         if (requestCode == Constants.RC_SIGN_IN) {
+            // Objeto con la información del intent -- De hecho el intent de SignIn()
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
+
             } else {
                 // Google Sign In failed, update UI appropriately
                 // ...
                 Log.d(Constants.LOG_TAG, result.getStatus().getStatusCode() + "");
+                Toast.makeText(Login.this, "Something went wrong", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -185,16 +231,11 @@ public class Login extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                         }else{
                             startActivity(new Intent(Login.this, PartidosRecyclerViewActvity.class));
-
                         }
                         // ...
                     }
                 });
     }
-
-
-
-
 
 
 }
