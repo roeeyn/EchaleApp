@@ -40,15 +40,12 @@ android:orientation="vertical"
     app:cardCornerRadius="26dp"
     app:cardElevation="1dp">
 
-    <TextView
-        android:id="@+id/logo_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/logo_text"
-        android:textColor="#fff"
-        android:textSize="32sp"
-        android:textStyle="bold" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/logo_echale"
+
+        />
 </android.support.v7.widget.CardView>
 
 <android.support.v7.widget.CardView
@@ -403,14 +400,10 @@ android:gravity="center_vertical">
     android:layout_weight="1"
     android:gravity="center_horizontal">
 
-    <ImageView
-        android:id="@+id/facebook_img"
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:contentDescription="@string/fb_icon"
-        android:src="@drawable/ic_facebook_pink"
-        android:layout_marginRight="20dp" />
+        android:layout_height="wrap_content" />
 
 
 </LinearLayout>
