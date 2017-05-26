@@ -40,7 +40,7 @@
                     <de.hdodenhof.circleimageview.CircleImageView
                         xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/local_team_image"
-                        android:src="@mipmap/ic_launcher"
+                        android:src="@drawable/coyotes"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="7"
@@ -80,7 +80,7 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:src="@mipmap/ic_launcher"
+                        android:src="@drawable/coyotes2"
                         android:id="@+id/away_team_image"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"

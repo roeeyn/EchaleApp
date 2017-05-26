@@ -1,17 +1,18 @@
-package bit01.com.mx.echale;
+package bit01.com.mx.echale.ui;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+import bit01.com.mx.echale.models.Partido;
+import bit01.com.mx.echale.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -80,7 +81,7 @@ public class PartidoAdapter extends RecyclerView.Adapter<PartidoAdapter.PartidoV
             awayTeamName.setText(partido.getAwayTeam());
             matchDate.setText(partido.getDate());
             matchTime.setText(partido.getTime());
-
+            /*
             if(!partido.getLocalTeamImageUrl().isEmpty()) {
                 Glide.with(context)
                         .load(partido.getLocalTeamImageUrl())
@@ -91,7 +92,11 @@ public class PartidoAdapter extends RecyclerView.Adapter<PartidoAdapter.PartidoV
                 Glide.with(context)
                         .load(partido.getAwayTeamImageUrl())
                         .into(awayTeamImage);
-            }
+            }*/
+
+            localTeamImage.setImageResource(R.drawable.coyotes);
+            awayTeamImage.setImageResource(R.drawable.coyotes2);
+
         }
     }
 }

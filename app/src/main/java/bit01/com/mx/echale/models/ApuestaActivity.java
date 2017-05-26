@@ -1,10 +1,11 @@
-package bit01.com.mx.echale;
+package bit01.com.mx.echale.models;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
 
+import bit01.com.mx.echale.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

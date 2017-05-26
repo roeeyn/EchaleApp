@@ -1,22 +1,23 @@
-package bit01.com.mx.echale;
+package bit01.com.mx.echale.ui;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import bit01.com.mx.echale.R;
+import bit01.com.mx.echale.utils.Constants;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class Login extends AppCompatActivity {
 
-    @BindView(R.id.etUser)
+    @BindView(R.id.email)
     EditText etUser;
 
-    @BindView(R.id.etPassword)
+    @BindView(R.id.password)
     EditText etPassword;
 
     @Override
@@ -26,11 +27,11 @@ public class Login extends AppCompatActivity {
         ButterKnife.bind(this);
     }
 
-    @OnClick(R.id.floatingActionButton)
+    @OnClick(R.id.buttonLogin)
     public void onFabClick(){
 
         if(checarDatosVacios()){
-
+            ButterKnife.bind(this);
             Intent intent = new Intent(Login.this, PartidosRecyclerViewActvity.class);
             intent.putExtra(Constants.TAG_USER, etUser.getText().toString());
             startActivity(intent);

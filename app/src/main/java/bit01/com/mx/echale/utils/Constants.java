@@ -1,4 +1,4 @@
-package bit01.com.mx.echale;
+package bit01.com.mx.echale.utils;
 
 /**
  * Created by roeeyn on 22/05/17.

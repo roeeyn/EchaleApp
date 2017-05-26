@@ -11,7 +11,7 @@
         android:roundIcon="@drawable/coyotes"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Login">
+        <activity android:name=".ui.Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,10 +19,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PartidosRecyclerViewActvity"
+            android:name=".ui.PartidosRecyclerViewActvity"
             android:label="@string/title_activity_partidos_recycler_view_actvity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ApuestaActivity">
+        <activity android:name=".models.ApuestaActivity">
 
 
 
