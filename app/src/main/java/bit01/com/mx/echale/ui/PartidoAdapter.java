@@ -1,6 +1,7 @@
 package bit01.com.mx.echale.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +12,10 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+import bit01.com.mx.echale.models.ApuestaActivity;
 import bit01.com.mx.echale.models.Partido;
 import bit01.com.mx.echale.R;
+import bit01.com.mx.echale.utils.Constants;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -71,8 +74,14 @@ public class PartidoAdapter extends RecyclerView.Adapter<PartidoAdapter.PartidoV
         @BindView(R.id.match_time)
         TextView matchTime;
 
+        String mLocalUrl;
+        String mAwayUrl;
+
+        private View rootView;
+
         public PartidoViewHolder(View itemView) {
             super(itemView);
+            rootView = itemView;
             ButterKnife.bind(this, itemView);
         }
 
@@ -81,6 +90,9 @@ public class PartidoAdapter extends RecyclerView.Adapter<PartidoAdapter.PartidoV
             awayTeamName.setText(partido.getAwayTeam());
             matchDate.setText(partido.getDate());
             matchTime.setText(partido.getTime());
+            mLocalUrl = partido.getLocalTeamImageUrl();
+            mAwayUrl = partido.getAwayTeamImageUrl();
+
             /*
             if(!partido.getLocalTeamImageUrl().isEmpty()) {
                 Glide.with(context)
@@ -96,6 +108,20 @@ public class PartidoAdapter extends RecyclerView.Adapter<PartidoAdapter.PartidoV
 
             localTeamImage.setImageResource(R.drawable.coyotes);
             awayTeamImage.setImageResource(R.drawable.coyotes2);
+
+            rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent intent = new Intent(context, ApuestaActivity.class);
+                    intent.putExtra(Constants.TAG_LOCAL, localTeamName.getText().toString());
+                    intent.putExtra(Constants.TAG_AWAY, awayTeamName.getText().toString());
+                    intent.putExtra(Constants.TAG_LOCAL_IMAGE, mLocalUrl);
+                    intent.putExtra(Constants.TAG_AWAY_IMAGE, mAwayUrl);
+                    context.startActivity(intent);
+
+                }
+            });
 
         }
     }
