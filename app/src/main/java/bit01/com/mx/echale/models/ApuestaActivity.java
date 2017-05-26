@@ -3,9 +3,11 @@ package bit01.com.mx.echale.models;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import bit01.com.mx.echale.R;
+import bit01.com.mx.echale.utils.Constants;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -16,6 +18,12 @@ public class ApuestaActivity extends AppCompatActivity {
     @BindView(R.id.btnApuesta)
     Button btnApuesta;
 
+    @BindView(R.id.localTeamNameApuesta)
+    TextView localName;
+
+    @BindView(R.id.awayTeamNameApuesta)
+    TextView awayName;
+
     SweetAlertDialog pDialog;
 
     @Override
@@ -24,6 +32,13 @@ public class ApuestaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_apuesta);
         ButterKnife.bind(this);
 
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){
+
+            localName.setText(extras.getString(Constants.TAG_LOCAL));
+            awayName.setText(extras.getString(Constants.TAG_AWAY));
+
+        }
 
     }
 
