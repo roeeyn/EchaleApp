@@ -1,0 +1,45 @@
+{
+  "project_info": {
+    "project_number": "323226744844",
+    "firebase_url": "https://echale-ded0d.firebaseio.com",
+    "project_id": "echale-ded0d",
+    "storage_bucket": "echale-ded0d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:323226744844:android:3f1553f2f9d4ed39",
+        "android_client_info": {
+          "package_name": "bit01.com.mx.echale"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "323226744844-1utt0la1lj0ht2lbll1qqnl9lnm7toce.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD812Ba9SLu2NNO3frmISGOayyevvS7TZk"
+        },
+        {
+          "current_key": "AIzaSyDCwREoJe69MJ_sNo7iPe3DR6MoSiNnFzA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
