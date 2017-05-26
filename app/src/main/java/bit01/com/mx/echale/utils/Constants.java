@@ -11,4 +11,5 @@ public class Constants {
     public static final int RC_SIGN_IN = 9001; //Request code de la conexión con google.
     public static final String LOG_TAG = "myLog"; // Tag para logs de error (Android monitor)
 
+    public static final String GOOGLE_CHOOSER = "1";
 }
