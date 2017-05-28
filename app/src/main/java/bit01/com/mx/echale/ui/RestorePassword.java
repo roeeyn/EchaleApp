@@ -48,7 +48,7 @@ public class RestorePassword extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if( task.isSuccessful() ){
-                            Toast.makeText(RestorePassword.this, "Verifica tu correo", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RestorePassword.this, "Se ha enviado a tu correo la solicitud", Toast.LENGTH_SHORT).show();
                             Log.e(Constants.LOG_TAG, "Successful password restore");
                         }else{
                             Toast.makeText(RestorePassword.this, "Something went wrong", Toast.LENGTH_SHORT).show();
