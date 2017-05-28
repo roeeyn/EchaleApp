@@ -22,7 +22,9 @@
             android:name=".ui.PartidosRecyclerViewActvity"
             android:label="@string/title_activity_partidos_recycler_view_actvity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".models.ApuestaActivity"></activity>
+        <activity android:name=".models.ApuestaActivity" />
+        <activity android:name=".ui.Registro" />
+        <activity android:name=".ui.RestorePassword"></activity>
     </application>
 
 </manifest>

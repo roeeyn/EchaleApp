@@ -238,4 +238,13 @@ public class Login extends AppCompatActivity {
     }
 
 
+    @OnClick(R.id.link_signup)
+    public void signUpLink(){
+        startActivity(new Intent(Login.this, Registro.class));
+    }
+
+    @OnClick(R.id.link_restore_password)
+    public void restorePasswordLink(){
+        startActivity(new Intent(Login.this, RestorePassword.class));
+    }
 }
