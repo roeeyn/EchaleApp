@@ -1,16 +1,10 @@
 package bit01.com.mx.echale.ui;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,8 +19,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.getkeepsafe.taptargetview.TapTarget;
-import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
@@ -50,8 +42,6 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
     List<Partido> mPartidos =new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     RecyclerView recyclerView;
-
-    SharedPreferences sharedPreferences;
 
     public void poblarPartidosDummy(){
 
@@ -100,60 +90,6 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-        boolean pruebaMostrada = sharedPreferences.getBoolean(Constants.TAG_PRUEBA_YA_HECHA, false);
-        if(!pruebaMostrada){
-
-            final Drawable droid = ContextCompat.getDrawable(this, R.drawable.ic_cards_white_24dp);
-
-            final Rect droidTarget = new Rect(0, 0, droid.getIntrinsicWidth() * 25, droid.getIntrinsicHeight() * 25);
-
-
-            final TapTargetSequence sequence = new TapTargetSequence(this)
-                    .targets(
-                            TapTarget.forToolbarNavigationIcon(toolbar, "Este es el botón de opciones", "Aquí podrás encontrar opciones como perfil, tus apuestas, tu historial, etc")
-                                    .cancelable(false)
-                                    .id(1),
-                            TapTarget.forToolbarOverflow(toolbar, "Más opciones", "Aquí verás más opciones, como cerrar sesión")
-                                    .cancelable(false)
-                                    .id(2),
-
-                            TapTarget.forBounds(droidTarget, "Échale!", "En esta sección podrás elegir el partido de tu preferencia y apostar.")
-                                    .cancelable(false)
-                                    .icon(droid)
-                                    .id(3)
-
-
-                    ).listener(new TapTargetSequence.Listener() {
-                        @Override
-                        public void onSequenceFinish() {
-
-                            Toast.makeText(PartidosRecyclerViewActvity.this, "Ahora haz tu primera apuesta", Toast.LENGTH_SHORT).show();
-
-                        }
-
-                        @Override
-                        public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
-
-                        }
-
-                        @Override
-                        public void onSequenceCanceled(TapTarget lastTarget) {
-
-                            Toast.makeText(PartidosRecyclerViewActvity.this, "Algo salió mal :(", Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
-
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean(Constants.TAG_PRUEBA_YA_HECHA, true);
-            editor.commit();
-            sequence.start();
-
-        }
-
-
 
 
     }
@@ -248,7 +184,4 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
     }
 
 
-    public Activity getActivity() {
-        return this;
-    }
 }
