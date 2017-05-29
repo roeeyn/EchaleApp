@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -15,6 +16,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.ProviderQueryResult;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -27,10 +29,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 
 public class Registro extends AppCompatActivity  implements DatePickerDialog.OnDateSetListener {
 
@@ -91,8 +89,10 @@ public class Registro extends AppCompatActivity  implements DatePickerDialog.OnD
         final String name = inputName.getText().toString().trim();
         final String lastName = inputLastName.getText().toString().trim();
         String birthDate = inputBirthDate.getText().toString().trim();
-        String password = inputPassword.getText().toString().trim();
+        final String password = inputPassword.getText().toString().trim();
         String confirmPassword = inputConfirmPassword.getText().toString().trim();
+
+
 
         if( email.isEmpty() || name.isEmpty() || lastName.isEmpty() ||
             birthDate.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() ){
@@ -107,31 +107,50 @@ public class Registro extends AppCompatActivity  implements DatePickerDialog.OnD
                     Toast.makeText( Registro.this , "La contraseña debe tener al menos 6 caracteres", Toast.LENGTH_LONG).show();
                     inputPassword.setText("");
                     inputConfirmPassword.setText("");
+                }else if(Constants.validateEmail(email)){
+                    mFirebaseAuth.fetchProvidersForEmail(email).addOnCompleteListener(new OnCompleteListener<ProviderQueryResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<ProviderQueryResult> task) {
+                            if (task.isSuccessful()){
+                                Log.e(Constants.LOG_TAG, task.getResult().getProviders().size() + "");
+                                if (task.getResult().getProviders().size() > 0)
+                                    Toast.makeText(Registro.this, "Ya existe una cuenta con este correo", Toast.LENGTH_SHORT).show();
+                                else
+                                    saveUserData(name, lastName, email, password);
+                            }else{
+                                Toast.makeText(Registro.this, "No se pudo realizar la tarea", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 }else{
-                    mProgressDialog.setTitle("Creando cuenta");
-                    mProgressDialog.setMessage("Esta acción puede tomar algunos segundos..");
-                    mProgressDialog.show();
-
-                    mFirebaseAuth.createUserWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(Registro.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if( task.isSuccessful()  ) {
-                                        saveDataOnFirebase(name, lastName, email);
-                                        Toast.makeText(Registro.this, "Registrado exitosamente", Toast.LENGTH_SHORT).show();
-                                        mProgressDialog.hide();
-                                        startActivity(new Intent(Registro.this, PartidosRecyclerViewActvity.class));
-                                    }else {
-                                        Log.e(Constants.LOG_TAG, task.getResult() + "");
-                                        Toast.makeText(Registro.this, "No se pudo registrar, verifica los campos", Toast.LENGTH_SHORT).show();
-                                        mProgressDialog.hide();
-                                    }
-                                }
-                            });
+                    Toast.makeText(Registro.this, "No es un correo válido", Toast.LENGTH_SHORT).show();
                 }
             }
         }
 
+    }
+
+
+    public void saveUserData(final String name, final String lastName, final String email, final String password){
+        mProgressDialog.setTitle("Creando cuenta");
+        mProgressDialog.setMessage("Esta acción puede tomar algunos segundos..");
+        mProgressDialog.show();
+
+        mFirebaseAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(Registro.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if( task.isSuccessful()  ) {
+                            saveDataOnFirebase(name, lastName, email);
+                            Toast.makeText(Registro.this, "Registrado exitosamente", Toast.LENGTH_SHORT).show();
+                            mProgressDialog.hide();
+                            startActivity(new Intent(Registro.this, PartidosRecyclerViewActvity.class));
+                        }else {
+                                Toast.makeText(Registro.this, "No se pudo registrar, verifica los campos", Toast.LENGTH_SHORT).show();
+                                mProgressDialog.hide();
+                        }
+                    }
+                });
     }
 
     public void saveDataOnFirebase(String name, String lastName, String email){

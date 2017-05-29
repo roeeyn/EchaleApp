@@ -1,5 +1,7 @@
 package bit01.com.mx.echale.utils;
 
+import android.text.TextUtils;
+
 /**
  * Created by roeeyn on 22/05/17.
  */
@@ -17,4 +19,12 @@ public class Constants {
 
 
     public static final String GOOGLE_CHOOSER = "1";
+
+    public static boolean validateEmail(CharSequence target){
+        if (TextUtils.isEmpty(target)) {
+            return false;
+        } else {
+            return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+        }
+    }
 }

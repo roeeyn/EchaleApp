@@ -27,6 +27,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.ProviderQueryResult;
 
 import java.io.Serializable;
 
@@ -130,11 +131,11 @@ public class Login extends AppCompatActivity {
 
     private void userLogin() {
         final String email = inputEmailText.getText().toString().trim();
-        String password = inputPasswordText.getText().toString().trim();
+        final String password = inputPasswordText.getText().toString().trim();
         if( email.isEmpty() ){
-            Toast.makeText( Login.this , "El input correo no puede estar vacío", Toast.LENGTH_LONG).show();
+            Toast.makeText( Login.this , "El campo correo no puede estar vacío", Toast.LENGTH_LONG).show();
         }else if( password.isEmpty() ){
-            Toast.makeText( Login.this , "El input password no puede estar vacío", Toast.LENGTH_LONG).show();
+            Toast.makeText( Login.this , "El campo password no puede estar vacío", Toast.LENGTH_LONG).show();
         }else {
 
             mProgressDialog.setTitle("Iniciando sesión");
@@ -153,7 +154,22 @@ public class Login extends AppCompatActivity {
                                 startActivity(intent);
                             }else{
                                 mProgressDialog.hide();
-                                Toast.makeText(Login.this, "Intenta registarte", Toast.LENGTH_SHORT).show();;
+
+                                if (!Constants.validateEmail(email))
+                                    Toast.makeText(Login.this, "Ingresa un correo valido", Toast.LENGTH_SHORT).show();
+                                else{
+                                    mAuth.fetchProvidersForEmail(email).addOnCompleteListener(new OnCompleteListener<ProviderQueryResult>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<ProviderQueryResult> task) {
+                                            if (task.isSuccessful()){
+                                                if (task.getResult().getProviders().size() > 0)
+                                                    Toast.makeText(Login.this, "La contraseña es incorrecta", Toast.LENGTH_SHORT).show();
+                                                else
+                                                    Toast.makeText(Login.this, "Este correo no está registado", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                                }
                             }
                         }
                     });
