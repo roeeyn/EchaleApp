@@ -86,28 +86,28 @@ public class PartidoAdapter extends RecyclerView.Adapter<PartidoAdapter.PartidoV
         }
 
         public void bindPartido(Partido partido){
-            localTeamName.setText(partido.getLocalTeam());
-            awayTeamName.setText(partido.getAwayTeam());
-            matchDate.setText(partido.getDate());
-            matchTime.setText(partido.getTime());
-            mLocalUrl = partido.getLocalTeamImageUrl();
-            mAwayUrl = partido.getAwayTeamImageUrl();
+            localTeamName.setText(partido.getNombreLocal());
+            awayTeamName.setText(partido.getNombreVisita());
+            matchDate.setText(partido.getFecha());
+            matchTime.setText(partido.getHora());
+            mLocalUrl = partido.getUrlLocal();
+            mAwayUrl = partido.getUrlVisita();
 
-            /*
+
             if(!partido.getLocalTeamImageUrl().isEmpty()) {
                 Glide.with(context)
-                        .load(partido.getLocalTeamImageUrl())
+                        .load(mLocalUrl)
                         .into(localTeamImage);
             }
 
             if(!partido.getAwayTeamImageUrl().isEmpty()) {
                 Glide.with(context)
-                        .load(partido.getAwayTeamImageUrl())
+                        .load(mAwayUrl)
                         .into(awayTeamImage);
-            }*/
+            }
 
-            localTeamImage.setImageResource(R.drawable.coyotes);
-            awayTeamImage.setImageResource(R.drawable.coyotes2);
+            //localTeamImage.setImageResource(R.drawable.coyotes);
+            //awayTeamImage.setImageResource(R.drawable.coyotes2);
 
             rootView.setOnClickListener(new View.OnClickListener() {
                 @Override

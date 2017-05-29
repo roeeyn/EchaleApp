@@ -1,9 +1,4 @@
-package bit01.com.mx.echale.models;
-
-/**
- * Created by ericklara on 24/05/17.
- */
-
+package bit01.com.mx.firebasetest;
 
 import java.util.HashMap;
 import java.util.Map;

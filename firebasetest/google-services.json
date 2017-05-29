@@ -1,0 +1,113 @@
+{
+  "project_info": {
+    "project_number": "323226744844",
+    "firebase_url": "https://echale-ded0d.firebaseio.com",
+    "project_id": "echale-ded0d",
+    "storage_bucket": "echale-ded0d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:323226744844:android:3f1553f2f9d4ed39",
+        "android_client_info": {
+          "package_name": "bit01.com.mx.echale"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "323226744844-kctu16vai9gd6klo97pl92fr3e3g3th8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "bit01.com.mx.echale",
+            "certificate_hash": "ba75ac4bf460fff432562163222952bc11942ab6"
+          }
+        },
+        {
+          "client_id": "323226744844-nnscopcf29a2k93ngjtth4c6arh1t16u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "bit01.com.mx.echale",
+            "certificate_hash": "f39056959a90cdf67a68f1d0805949448e9a3f89"
+          }
+        },
+        {
+          "client_id": "323226744844-1utt0la1lj0ht2lbll1qqnl9lnm7toce.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD812Ba9SLu2NNO3frmISGOayyevvS7TZk"
+        },
+        {
+          "current_key": "AIzaSyDCwREoJe69MJ_sNo7iPe3DR6MoSiNnFzA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "323226744844-1utt0la1lj0ht2lbll1qqnl9lnm7toce.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:323226744844:android:6d42e87fdc97041f",
+        "android_client_info": {
+          "package_name": "bit01.com.mx.firebasetest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "323226744844-t6of2pdmihg62iqu2m8d3bt829d00ugh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "bit01.com.mx.firebasetest",
+            "certificate_hash": "ba75ac4bf460fff432562163222952bc11942ab6"
+          }
+        },
+        {
+          "client_id": "323226744844-1utt0la1lj0ht2lbll1qqnl9lnm7toce.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD812Ba9SLu2NNO3frmISGOayyevvS7TZk"
+        },
+        {
+          "current_key": "AIzaSyDCwREoJe69MJ_sNo7iPe3DR6MoSiNnFzA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "323226744844-1utt0la1lj0ht2lbll1qqnl9lnm7toce.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
