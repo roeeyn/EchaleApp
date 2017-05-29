@@ -40,7 +40,7 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     List<Partido> mPartidos =new ArrayList<>();
-
+    private GoogleApiClient mGoogleApiClient;
     RecyclerView recyclerView;
 
     public void poblarPartidosDummy(){
@@ -65,6 +65,15 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
 
         ButterKnife.bind(this);
 
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(PartidosRecyclerViewActvity.this, new GoogleApiClient.OnConnectionFailedListener() {
+                            @Override
+                            public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                                Toast.makeText(PartidosRecyclerViewActvity.this, "Hay un error!", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                .addApi(Auth.GOOGLE_SIGN_IN_API)
+                .build();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -85,6 +94,11 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
 
     public void settingRecyclerView(){
 
@@ -128,9 +142,23 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+
+
     public void signOut(){
         FirebaseAuth.getInstance().signOut();
         Log.d(Constants.LOG_TAG, "Signed out successfully!");
+        // Google sign out
+
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(@NonNull Status status) {
+                        if(status.isSuccess())
+                            Log.e(Constants.LOG_TAG, "Google Auth Closed Successfully");
+                        else
+                            Log.e(Constants.LOG_TAG, "Google Auth Seems To Have Errors");
+                    }
+                });
         startActivity(new Intent(PartidosRecyclerViewActvity.this, Login.class));
     }
 
