@@ -9,10 +9,11 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/firebasetest" />
             <option value="$PROJECT_DIR$/guillotinemenu" />
+            <option value="$PROJECT_DIR$/login.2" />
             <option value="$PROJECT_DIR$/steppertouch" />
             <option value="$PROJECT_DIR$/taptargetview" />
-            <option value="$PROJECT_DIR$/login.2" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
