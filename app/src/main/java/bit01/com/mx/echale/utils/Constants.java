@@ -14,6 +14,7 @@ public class Constants {
     public static final String TAG_AWAY = "AWAY";
     public static final String TAG_LOCAL_IMAGE = "LOCALIMAGE";
     public static final String TAG_AWAY_IMAGE = "AWAYIMAGE";
+    public static final String TAG_PRUEBA_YA_HECHA = "pruebahecha";
 
 
     public static final String GOOGLE_CHOOSER = "1";
