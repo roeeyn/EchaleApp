@@ -13,25 +13,18 @@ public class User {
     private String urlPicture;
     private int monedas;
     private Historial historial;
+    private String photoUrl;
 
     public User() {
         // Default constructor
     }
 
-    public String getUrlPicture() {
-        return urlPicture;
-    }
-
-    public void setUrlPicture(String urlPicture) {
-        this.urlPicture = urlPicture;
-    }
-
-    public User(String nombre, String mail, String urlPicture, int monedas, Historial historial) {
+    public User(String nombre, String mail, int monedas, Historial historial, String photoUrl) {
         this.nombre = nombre;
         this.mail = mail;
-        this.urlPicture = urlPicture;
         this.monedas = monedas;
         this.historial = historial;
+        this.photoUrl = photoUrl;
     }
 
     @Override
@@ -39,7 +32,7 @@ public class User {
         return "User{" +
                 "nombre='" + nombre + '\'' +
                 ", mail='" + mail + '\'' +
-                ", urlPicture='" + urlPicture + '\'' +
+                ", photoUrl ='" +  photoUrl + '\'' +
                 ", monedas=" + monedas +
                 ", historial=" + historial +
                 '}';
@@ -75,5 +68,13 @@ public class User {
 
     public void setHistorial(Historial historial) {
         this.historial = historial;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 }

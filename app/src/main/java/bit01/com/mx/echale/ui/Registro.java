@@ -141,7 +141,7 @@ public class Registro extends AppCompatActivity  implements DatePickerDialog.OnD
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if( task.isSuccessful()  ) {
-                            saveDataOnFirebase(name, lastName, email);
+                            saveDataOnFirebase(name, lastName, email, "");
                             Toast.makeText(Registro.this, "Registrado exitosamente", Toast.LENGTH_SHORT).show();
                             mProgressDialog.hide();
                             startActivity(new Intent(Registro.this, PartidosRecyclerViewActvity.class));
@@ -153,10 +153,11 @@ public class Registro extends AppCompatActivity  implements DatePickerDialog.OnD
                 });
     }
 
-    public void saveDataOnFirebase(String name, String lastName, String email){
+    public void saveDataOnFirebase(String name, String lastName, String email, String photoUrl){
 
         User user = new User(
-                name + " " + lastName, email,"", 300, null
+                name + " " + lastName, email, 300, null, ""
+
         );
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();

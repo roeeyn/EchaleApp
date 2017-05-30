@@ -11,7 +11,6 @@ import com.bumptech.glide.Glide;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.squareup.picasso.Picasso;
-
 import bit01.com.mx.echale.R;
 import bit01.com.mx.echale.utils.Constants;
 import butterknife.BindView;
