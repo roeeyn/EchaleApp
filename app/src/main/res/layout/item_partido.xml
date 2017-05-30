@@ -40,11 +40,11 @@
                     <de.hdodenhof.circleimageview.CircleImageView
                         xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/local_team_image"
-                        android:src="@drawable/coyotes"
+                        android:src="@drawable/soccer_ball"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="7"
-                        app:civ_border_width="2dp"
+                        app:civ_border_width="0dp"
                         app:civ_border_color="#000"/>
 
                     <TextView
@@ -80,12 +80,12 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:src="@drawable/coyotes2"
+                        android:src="@drawable/soccer_ball"
                         android:id="@+id/away_team_image"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="7"
-                        app:civ_border_width="2dp"
+                        app:civ_border_width="0dp"
                         app:civ_border_color="#000"/>
 
                     <TextView

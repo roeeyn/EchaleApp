@@ -17,8 +17,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
@@ -37,7 +40,9 @@ import java.util.List;
 
 import bit01.com.mx.echale.R;
 import bit01.com.mx.echale.models.Partido;
+import bit01.com.mx.echale.models.User;
 import bit01.com.mx.echale.utils.Constants;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -47,6 +52,9 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
     List<Partido> mPartidos =new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     RecyclerView recyclerView;
+
+    ImageView ivProfilePic;
+    TextView username;
 
     public void poblarPartidosDummy(){
 
@@ -98,6 +106,8 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        ivProfilePic = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.imageViewFotoPerfilRecyclerView);
+        username = (TextView) navigationView.getHeaderView(0).findViewById(R.id.nombreUsuarioRecyclerView);
         navigationView.setNavigationItemSelectedListener(this);
 
 
@@ -192,6 +202,7 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
         return true;
     }
 
+
     public void traerPartidos(){
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -203,12 +214,13 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
+                partidos.clear();
+
                 Iterable<DataSnapshot> children = dataSnapshot.child("partidosActuales").getChildren();
                 for(DataSnapshot child : children){
 
                     partidos.add(child.getValue(Partido.class));
-                    //Partido partido = child.getValue(Partido.class);
-                    //Log.e("logChido", partido.getIdPartido().toString());
 
                 }
 

@@ -156,7 +156,7 @@ public class Registro extends AppCompatActivity  implements DatePickerDialog.OnD
     public void saveDataOnFirebase(String name, String lastName, String email){
 
         User user = new User(
-                name + " " + lastName, email, 300, null
+                name + " " + lastName, email,"", 300, null
         );
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
