@@ -10,7 +10,17 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import bit01.com.mx.echale.R;
 import bit01.com.mx.echale.utils.Constants;
 import butterknife.BindView;
@@ -19,10 +29,17 @@ import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static bit01.com.mx.echale.R.color.colorAccent;
-import static bit01.com.mx.echale.R.color.colorPrimaryText;
 
 public class ApuestaActivity extends AppCompatActivity {
+
+    @BindView(R.id.momioLocal)
+    TextView tvMomioLocal;
+
+    @BindView(R.id.momioEmpate)
+    TextView tvMomioEmpate;
+
+    @BindView(R.id.momioVisita)
+    TextView tvMomioVisita;
 
     @BindView(R.id.btnApuesta)
     Button btnApuesta;
@@ -50,6 +67,10 @@ public class ApuestaActivity extends AppCompatActivity {
     Boolean yaSelecciono = false;
     String evento = "";
     String equipo = "";
+    long partidoID;
+
+    private List<Partido> mPartidos = new ArrayList<>();
+    private long mBolsaTotal, mBolsaLocal, mBolsaEmpate,mBolsaVisita;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +85,8 @@ public class ApuestaActivity extends AppCompatActivity {
 
             localName.setText(extras.getString(Constants.TAG_LOCAL));
             awayName.setText(extras.getString(Constants.TAG_AWAY));
+
+            partidoID = extras.getLong(Constants.TAG_PARTIDO_ID);
 
             if(!extras.getString(Constants.TAG_AWAY_IMAGE).isEmpty()) {
                 Picasso.with(ApuestaActivity.this)
@@ -80,6 +103,8 @@ public class ApuestaActivity extends AppCompatActivity {
             }
 
         }
+
+        traerPartidos();
 
     }
 
@@ -135,6 +160,66 @@ public class ApuestaActivity extends AppCompatActivity {
         logoVisita.setBorderColor(getResources().getColor(R.color.colorPrimaryText));
         tvEmpate.setBackgroundColor(getResources().getColor(R.color.colorAccent));
         yaSelecciono = true;
+
+    }
+
+    public void traerPartidos(){
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("/");
+
+        final List<Partido> partidos = new ArrayList<>();
+
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Toast.makeText(ApuestaActivity.this, "Que pedoooo "+partidoID, Toast.LENGTH_SHORT).show();
+
+                partidos.clear();
+
+                Iterable<DataSnapshot> children = dataSnapshot.child("partidosActuales").getChildren();
+                for(DataSnapshot child : children){
+
+                    partidos.add(child.getValue(Partido.class));
+
+                }
+
+                mPartidos = partidos;
+
+                updateApuestas(mPartidos);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void updateApuestas(List<Partido> partidos) {
+
+        Partido partidoActual = partidos.get((int)partidoID-1);
+
+        Map<String, Object> apuestasPartidoActual = partidoActual.getApuestas();
+
+        mBolsaTotal = (long) apuestasPartidoActual.get("bolsaTotalPartido");
+
+        Map<String, Object> apuestasLocal = (Map<String, Object>) apuestasPartidoActual.get("local");
+        mBolsaLocal = (long) apuestasLocal.get("bolsaLocal");
+
+        Map<String, Object> apuestasEmpate = (Map<String, Object>) apuestasPartidoActual.get("empate");
+        mBolsaEmpate = (long) apuestasEmpate.get("bolsaEmpate");
+
+        Map<String, Object> apuestasVista = (Map<String, Object>) apuestasPartidoActual.get("visita");
+        mBolsaVisita = (long) apuestasVista.get("bolsaVisita");
+
+        tvMomioLocal.setText(mBolsaLocal+"");
+        tvMomioEmpate.setText(mBolsaEmpate+"");
+        tvMomioVisita.setText(mBolsaVisita+"");
 
     }
 

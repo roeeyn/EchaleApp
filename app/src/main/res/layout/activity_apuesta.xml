@@ -95,6 +95,7 @@
             android:layout_marginTop="5dp">
 
             <TextView
+                android:id="@+id/momioLocal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="45"
@@ -103,6 +104,7 @@
                 android:gravity="center"/>
 
             <TextView
+                android:id="@+id/momioEmpate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="16"
@@ -111,6 +113,7 @@
                 android:gravity="center"/>
 
             <TextView
+                android:id="@+id/momioVisita"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="45"
