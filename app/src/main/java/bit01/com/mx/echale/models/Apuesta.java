@@ -4,7 +4,14 @@ package bit01.com.mx.echale.models;
  * Created by ericklara on 27/05/17.
  */
 
-class Apuesta {
+/*
+*
+*
+* ESTA CLASE ES PARA USARSE EN EL HISTORIAL, NO SE CONFUNDA CON "APUESTAS" QUE ES EL MODELO DE FIREBASE
+*
+* */
+
+public class Apuesta {
 
     private String Evento;
     private String id_partido;

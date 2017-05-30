@@ -26,6 +26,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,16 +50,16 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
 
     public void poblarPartidosDummy(){
 
-        mPartidos.add(new Partido("Coyotes", "Necaxa", "12/10/2017", "urlLocal", "urlVista", "13:00"));
-        mPartidos.add(new Partido("México", "Inglaterra", "13/10/2017", "urlLocal", "urlVista", "13:00"));
-        mPartidos.add(new Partido("América", "Chivas", "14/10/2017", "urlLocal", "urlVista", "13:00"));
-        mPartidos.add(new Partido("Toluca", "Puebla", "15/10/2017", "urlLocal", "urlVista", "13:00"));
-        mPartidos.add(new Partido("Atlante", "Atlas", "16/10/2017", "urlLocal", "urlVista", "13:00"));
-        mPartidos.add(new Partido("Pachuca", "Correcaminos", "17/10/2017", "urlLocal", "urlVista", "13:00"));
-        mPartidos.add(new Partido("Cruz Azul", "Pumas", "18/10/2017", "urlLocal", "urlVista", "13:00"));
-        mPartidos.add(new Partido("Real Madrid", "Barcelona", "19/10/2017", "urlLocal", "urlVista", "13:00"));
-        mPartidos.add(new Partido("Chelsea", "Osasuna", "20/10/2017", "urlLocal", "urlVista", "13:00"));
-        mPartidos.add(new Partido("Atlético de Madrid", "Borussia Dortmund", "21/10/2017", "urlLocal", "urlVista", "13:00"));
+        mPartidos.add(new Partido(1, "Coyotes", "Necaxa", "12/10/2017", "urlLocal", "urlVista", "13:00", "pendiente"));
+        mPartidos.add(new Partido(2,"México", "Inglaterra", "13/10/2017", "urlLocal", "urlVista", "13:00", "pendiente"));
+        mPartidos.add(new Partido(3,"América", "Chivas", "14/10/2017", "urlLocal", "urlVista", "13:00", "pendiente"));
+        mPartidos.add(new Partido(4,"Toluca", "Puebla", "15/10/2017", "urlLocal", "urlVista", "13:00", "pendiente"));
+        mPartidos.add(new Partido(5,"Atlante", "Atlas", "16/10/2017", "urlLocal", "urlVista", "13:00", "pendiente"));
+        mPartidos.add(new Partido(6,"Pachuca", "Correcaminos", "17/10/2017", "urlLocal", "urlVista", "13:00", "pendiente"));
+        mPartidos.add(new Partido(7,"Cruz Azul", "Pumas", "18/10/2017", "urlLocal", "urlVista", "13:00", "pendiente"));
+        mPartidos.add(new Partido(8,"Real Madrid", "Barcelona", "19/10/2017", "urlLocal", "urlVista", "13:00", "pendiente"));
+        mPartidos.add(new Partido(9,"Chelsea", "Osasuna", "20/10/2017", "urlLocal", "urlVista", "13:00", "pendiente"));
+        mPartidos.add(new Partido(10,"Atlético de Madrid", "Borussia Dortmund", "21/10/2017", "urlLocal", "urlVista", "13:00", "pendiente"));
 
     }
 
@@ -80,9 +85,13 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        poblarPartidosDummy();
+        getSupportActionBar().setTitle("Lista de Partidos");
+
+        traerPartidos();
+
+        //poblarPartidosDummy();
         recyclerView = (RecyclerView) findViewById(R.id.rvPartidos);
-        settingRecyclerView();
+        //settingRecyclerView();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -188,6 +197,40 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void traerPartidos(){
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("/");
+
+        final List<Partido> partidos = new ArrayList<>();
+
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterable<DataSnapshot> children = dataSnapshot.child("partidosActuales").getChildren();
+                for(DataSnapshot child : children){
+
+                    partidos.add(child.getValue(Partido.class));
+                    //Partido partido = child.getValue(Partido.class);
+                    //Log.e("logChido", partido.getIdPartido().toString());
+
+                }
+
+                mPartidos = partidos;
+                settingRecyclerView();
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
 

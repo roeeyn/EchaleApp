@@ -1,1 +1,1 @@
-include ':app', ':steppertouch', ':guillotinemenu', ':taptargetview' , ':login.2'
+include ':app', ':steppertouch', ':guillotinemenu', ':taptargetview', ':firebasetest', ':login.2'

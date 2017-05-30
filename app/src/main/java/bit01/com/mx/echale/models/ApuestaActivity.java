@@ -6,12 +6,16 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
 import bit01.com.mx.echale.R;
 import bit01.com.mx.echale.utils.Constants;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ApuestaActivity extends AppCompatActivity {
 
@@ -24,6 +28,12 @@ public class ApuestaActivity extends AppCompatActivity {
     @BindView(R.id.awayTeamNameApuesta)
     TextView awayName;
 
+    @BindView(R.id.localTeamImage)
+    CircleImageView logoLocal;
+
+    @BindView(R.id.awayTeamImage)
+    CircleImageView logoVisita;
+
     SweetAlertDialog pDialog;
 
     @Override
@@ -32,11 +42,25 @@ public class ApuestaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_apuesta);
         ButterKnife.bind(this);
 
+        getSupportActionBar().setTitle("Échale!");
+
         Bundle extras = getIntent().getExtras();
         if(extras != null){
 
             localName.setText(extras.getString(Constants.TAG_LOCAL));
             awayName.setText(extras.getString(Constants.TAG_AWAY));
+
+            if(!extras.getString(Constants.TAG_AWAY_IMAGE).isEmpty()) {
+                Glide.with(ApuestaActivity.this)
+                        .load(extras.getString(Constants.TAG_AWAY_IMAGE))
+                        .into(logoVisita);
+            }
+
+            if(!extras.getString(Constants.TAG_LOCAL_IMAGE).isEmpty()) {
+                Glide.with(ApuestaActivity.this)
+                        .load(extras.getString(Constants.TAG_LOCAL_IMAGE))
+                        .into(logoLocal);
+            }
 
         }
 

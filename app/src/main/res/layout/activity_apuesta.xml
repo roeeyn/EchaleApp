@@ -63,7 +63,7 @@
                 android:layout_width="0dp"
                 android:layout_height="96dp"
                 android:layout_weight="45"
-                android:src="@drawable/coyotes"
+                android:src="@drawable/soccer_ball"
                 app:civ_border_color="#FF000000"
                 app:civ_border_width="2dp" />
 
@@ -81,7 +81,7 @@
                 android:layout_width="0dp"
                 android:layout_height="96dp"
                 android:layout_weight="45"
-                android:src="@drawable/coyotes2"
+                android:src="@drawable/soccer_ball"
                 app:civ_border_color="#FF000000"
                 app:civ_border_width="2dp" />
 
@@ -120,7 +120,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="30dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -143,7 +143,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="30dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -166,7 +166,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="30dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
