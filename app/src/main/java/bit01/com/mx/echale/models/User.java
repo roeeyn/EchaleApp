@@ -10,6 +10,7 @@ public class User {
 
     private String nombre;
     private String mail;
+    private String urlPicture;
     private int monedas;
     private Historial historial;
 
@@ -17,11 +18,31 @@ public class User {
         // Default constructor
     }
 
-    public User(String nombre, String mail, int monedas, Historial historial) {
+    public String getUrlPicture() {
+        return urlPicture;
+    }
+
+    public void setUrlPicture(String urlPicture) {
+        this.urlPicture = urlPicture;
+    }
+
+    public User(String nombre, String mail, String urlPicture, int monedas, Historial historial) {
         this.nombre = nombre;
         this.mail = mail;
+        this.urlPicture = urlPicture;
         this.monedas = monedas;
         this.historial = historial;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "nombre='" + nombre + '\'' +
+                ", mail='" + mail + '\'' +
+                ", urlPicture='" + urlPicture + '\'' +
+                ", monedas=" + monedas +
+                ", historial=" + historial +
+                '}';
     }
 
     public String getNombre() {
