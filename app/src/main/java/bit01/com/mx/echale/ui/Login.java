@@ -28,10 +28,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.ProviderQueryResult;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.Serializable;
 
 import bit01.com.mx.echale.R;
+import bit01.com.mx.echale.models.User;
 import bit01.com.mx.echale.utils.Constants;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -256,6 +259,12 @@ public class Login extends AppCompatActivity {
                             Toast.makeText(Login.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }else{
+
+                            saveDataOnFirebase(
+                                    mAuth.getCurrentUser().getDisplayName(),
+                                    mAuth.getCurrentUser().getEmail(),
+                                    mAuth.getCurrentUser().getPhotoUrl().toString()
+                            );
                             startActivity(new Intent(Login.this, PartidosRecyclerViewActvity.class));
                         }
                         // ...
@@ -263,6 +272,17 @@ public class Login extends AppCompatActivity {
                 });
     }
 
+
+    public void saveDataOnFirebase(String name, String email, String photoUrl){
+
+        User user = new User(
+                name, email, 300, null, photoUrl
+        );
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users");
+        myRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user);
+    }
 
     // Manda a la actividad para registro
     @OnClick(R.id.link_signup)

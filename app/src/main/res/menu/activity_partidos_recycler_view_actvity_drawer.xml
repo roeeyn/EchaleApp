@@ -3,24 +3,24 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/nav_profile"
             android:icon="@drawable/ic_person_black_24dp"
             android:title="Perfil" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_historial"
             android:icon="@drawable/ic_update_black_24dp"
             android:title="Historial" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_bet"
             android:icon="@drawable/ic_cards_black_24dp"
             android:title="Apuestas" />
 
         <item
-            android:id="@+id/nav_creditos"
+            android:id="@+id/nav_coins"
             android:icon="@drawable/ic_coin_black_24dp"
             android:title="Créditos" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_help"
             android:icon="@drawable/ic_help_circle_black_24dp"
             android:title="Ayuda" />
     </group>
