@@ -63,6 +63,7 @@ public class Login extends AppCompatActivity {
         // Inicialización de ButterKnife
         ButterKnife.bind(this);
 
+        // Inicialización del ProgressDialog
         mProgressDialog = new ProgressDialog(Login.this);
 
         // Button bind to the view
@@ -78,7 +79,7 @@ public class Login extends AppCompatActivity {
                 .requestEmail()
                 .build();
 
-
+        // Builder para configurar la GoogleApiClient
         mGoogleApiClient = new GoogleApiClient.Builder(getApplicationContext())
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
@@ -130,7 +131,9 @@ public class Login extends AppCompatActivity {
     }
 
     private void userLogin() {
+        // Tomamos el correo
         final String email = inputEmailText.getText().toString().trim();
+        // Tomamos el password
         final String password = inputPasswordText.getText().toString().trim();
         if( email.isEmpty() ){
             Toast.makeText( Login.this , "El campo correo no puede estar vacío", Toast.LENGTH_LONG).show();
@@ -138,16 +141,18 @@ public class Login extends AppCompatActivity {
             Toast.makeText( Login.this , "El campo password no puede estar vacío", Toast.LENGTH_LONG).show();
         }else {
 
+            // Se asignan los valores iniciales del ProgressDialog
             mProgressDialog.setTitle("Iniciando sesión");
             mProgressDialog.setMessage("Esta acción puede tomar algunos segundos..");
             mProgressDialog.show();
 
+            // Se realiza el inicio de sesión con correo y contraseña
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if ( task.isSuccessful() ){
-                                // para el intent es this y a cual activity va con terminación.class
+                                // Para el intent es this y a cual activity va con terminación.class
                                 mProgressDialog.hide();
                                 Intent intent = new Intent(Login.this, PartidosRecyclerViewActvity.class);
                                 intent.putExtra("UserEmail", email);
@@ -155,6 +160,7 @@ public class Login extends AppCompatActivity {
                             }else{
                                 mProgressDialog.hide();
 
+                                // Validaciones de correo y contraseña, para mostrar errores al usuario
                                 if (!Constants.validateEmail(email))
                                     Toast.makeText(Login.this, "Ingresa un correo valido", Toast.LENGTH_SHORT).show();
                                 else{
@@ -180,6 +186,7 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        // Se agrega el listener a la instancia de FirebaseAuth
         mAuth.addAuthStateListener(mAuthListener);
     }
 
@@ -199,12 +206,14 @@ public class Login extends AppCompatActivity {
 
     // Método para inicio de sesión con Google
     private void signIn() {
+        // Inicio de sesión con google
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, Constants.RC_SIGN_IN);
     }
 
-    // Método para recibir el resultado de la acción de SignIn()
+
     @Override
+    // Método para recibir el resultado de la acción de SignIn()
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -229,6 +238,7 @@ public class Login extends AppCompatActivity {
         }
     }
 
+    // Inicio de sesión con cuenta google
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
 
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
@@ -254,11 +264,13 @@ public class Login extends AppCompatActivity {
     }
 
 
+    // Manda a la actividad para registro
     @OnClick(R.id.link_signup)
     public void signUpLink(){
         startActivity(new Intent(Login.this, Registro.class));
     }
 
+    // Manda a la actividad para recuperar contraseña
     @OnClick(R.id.link_restore_password)
     public void restorePasswordLink(){
         startActivity(new Intent(Login.this, RestorePassword.class));

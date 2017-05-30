@@ -63,8 +63,10 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_partidos_recycler_view_actvity);
 
+        // Inicializamos ButterKnife
         ButterKnife.bind(this);
 
+        // Inicializamos la instancia de GoogleApiClienta
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(PartidosRecyclerViewActvity.this, new GoogleApiClient.OnConnectionFailedListener() {
                             @Override
@@ -97,6 +99,7 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
+        // Hacemos la conexión de GoogleApiClient con Google Play Services
         mGoogleApiClient.connect();
     }
 
@@ -145,10 +148,12 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
 
 
     public void signOut(){
+        // Cierra la sesión de firebase
         FirebaseAuth.getInstance().signOut();
-        Log.d(Constants.LOG_TAG, "Signed out successfully!");
-        // Google sign out
 
+        // Log.d(Constants.LOG_TAG, "Signed out successfully!");
+
+        // Cierra la sesión de Google
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
@@ -159,6 +164,8 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
                             Log.e(Constants.LOG_TAG, "Google Auth Seems To Have Errors");
                     }
                 });
+
+        // Se inicia la actividad Login
         startActivity(new Intent(PartidosRecyclerViewActvity.this, Login.class));
     }
 
