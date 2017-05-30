@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -93,7 +94,7 @@ public class PartidoAdapter extends RecyclerView.Adapter<PartidoAdapter.PartidoV
             mLocalUrl = partido.getUrlLocal();
             mAwayUrl = partido.getUrlVisita();
 
-
+            /*
             if(!partido.getLocalTeamImageUrl().isEmpty()) {
                 Glide.with(context)
                         .load(mLocalUrl)
@@ -103,6 +104,20 @@ public class PartidoAdapter extends RecyclerView.Adapter<PartidoAdapter.PartidoV
             if(!partido.getAwayTeamImageUrl().isEmpty()) {
                 Glide.with(context)
                         .load(mAwayUrl)
+                        .into(awayTeamImage);
+            }*/
+
+            if(!partido.getLocalTeamImageUrl().isEmpty()) {
+                Picasso.with(context)
+                        .load(mLocalUrl)
+                        .resize(80,80)
+                        .into(localTeamImage);
+            }
+
+            if(!partido.getAwayTeamImageUrl().isEmpty()) {
+                Picasso.with(context)
+                        .load(mAwayUrl)
+                        .resize(80,80)
                         .into(awayTeamImage);
             }
 
