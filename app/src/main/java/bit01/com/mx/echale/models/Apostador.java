@@ -6,29 +6,17 @@ package bit01.com.mx.echale.models;
 
 public class Apostador {
 
-    private long apostadorId;
-
     private long monto;
 
     @Override
     public String toString() {
         return "Apostador{" +
-                "apostadorId='" + apostadorId + '\'' +
-                ", monto=" + monto +
+                "monto=" + monto +
                 '}';
     }
 
-    public Apostador(long apostadorId, long monto) {
-        this.apostadorId = apostadorId;
+    public Apostador(long monto) {
         this.monto = monto;
-    }
-
-    public long getApostadorId() {
-        return apostadorId;
-    }
-
-    public void setApostadorId(long apostadorId) {
-        this.apostadorId = apostadorId;
     }
 
     public long getMonto() {

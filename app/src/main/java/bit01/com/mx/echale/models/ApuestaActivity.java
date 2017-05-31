@@ -2,6 +2,7 @@ package bit01.com.mx.echale.models;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,6 +28,7 @@ import bit01.com.mx.echale.utils.Constants;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -47,6 +50,9 @@ public class ApuestaActivity extends AppCompatActivity {
     @BindView(R.id.montoApuesta)
     EditText montoApuesta;
 
+    @BindView(R.id.tvPosibleGanancia)
+    TextView tvPosibleGanancia;
+
     @BindView(R.id.localTeamNameApuesta)
     TextView localName;
 
@@ -64,13 +70,32 @@ public class ApuestaActivity extends AppCompatActivity {
 
     SweetAlertDialog pDialog;
 
-    Boolean yaSelecciono = false;
+    Boolean yaSelecciono = false, alertaSeleccionMostrada=false;
     String evento = "";
+    String apostadoresType="";
+    String bolsaType="";
     String equipo = "";
     long partidoID;
+    int intPartidoId;
+
+    float mtotalEvento;
+    int intMontoApuesta;
+    String mGananciaProbable;
+
+    FirebaseAuth mAuth;
+    String userUid;
 
     private List<Partido> mPartidos = new ArrayList<>();
     private long mBolsaTotal, mBolsaLocal, mBolsaEmpate,mBolsaVisita;
+    private float mFloatBolsaTotal, mFloatBolsaLocal, mFloatBolsaEmpate, mFloatBolsaVisita;
+
+    public boolean yaAposto(){
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("/");
+        return false;
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +105,9 @@ public class ApuestaActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("Échale!");
 
+        mAuth = FirebaseAuth.getInstance();
+        userUid = mAuth.getCurrentUser().getUid();
+
         Bundle extras = getIntent().getExtras();
         if(extras != null){
 
@@ -87,6 +115,7 @@ public class ApuestaActivity extends AppCompatActivity {
             awayName.setText(extras.getString(Constants.TAG_AWAY));
 
             partidoID = extras.getLong(Constants.TAG_PARTIDO_ID);
+            intPartidoId = (int)partidoID;
 
             if(!extras.getString(Constants.TAG_AWAY_IMAGE).isEmpty()) {
                 Picasso.with(ApuestaActivity.this)
@@ -122,6 +151,81 @@ public class ApuestaActivity extends AppCompatActivity {
 
     }
 
+
+    public void cambioSeleccion(){
+
+        switch(evento){
+
+            case "local":
+                mtotalEvento = mFloatBolsaLocal;
+                break;
+            case "visita":
+                mtotalEvento= mFloatBolsaVisita;
+                break;
+            case "empate":
+                mtotalEvento = mFloatBolsaEmpate;
+                break;
+            default:
+                mtotalEvento=0;
+                break;
+
+        }
+
+        intMontoApuesta = Integer.parseInt(montoApuesta.getText().toString());
+        mGananciaProbable = String.format("%.1f", ((intMontoApuesta/(mtotalEvento+intMontoApuesta))*(mBolsaTotal+intMontoApuesta)));
+        tvPosibleGanancia.setText("$"+mGananciaProbable);
+
+    }
+
+
+    @OnTextChanged(R.id.montoApuesta)
+    public void montoCambiado(Editable editable){
+
+        if(!editable.toString().isEmpty()){
+
+            if(!yaSelecciono){
+
+                if(!alertaSeleccionMostrada){
+
+                    alertaSeleccionMostrada = true;
+                    Toast.makeText(this, "Selecciona un equipo para ver tu posible ganancia", Toast.LENGTH_LONG).show();
+
+                }
+
+            }else{
+
+                switch(evento){
+
+                    case "local":
+                        mtotalEvento = mFloatBolsaLocal;
+                        break;
+                    case "visita":
+                        mtotalEvento= mFloatBolsaVisita;
+                        break;
+                    case "empate":
+                        mtotalEvento = mFloatBolsaEmpate;
+                        break;
+                    default:
+                        mtotalEvento=0;
+                        break;
+
+                }
+
+                intMontoApuesta = Integer.parseInt(editable.toString());
+                mGananciaProbable = String.format("%.1f", ((intMontoApuesta/(mtotalEvento+intMontoApuesta))*(mBolsaTotal+intMontoApuesta)));
+                tvPosibleGanancia.setText("$"+mGananciaProbable);
+
+            }
+
+
+        }else{
+
+            tvPosibleGanancia.setText("$0");
+
+        }
+
+    }
+
     @OnClick(R.id.localTeamImage)
     public void clickLocal(){
 
@@ -133,6 +237,15 @@ public class ApuestaActivity extends AppCompatActivity {
         logoVisita.setBorderColor(getResources().getColor(R.color.colorPrimaryText));
         tvEmpate.setBackgroundColor(getResources().getColor(R.color.colorTransparente));
         yaSelecciono = true;
+
+        if(!montoApuesta.getText().toString().isEmpty()){
+            cambioSeleccion();
+        }else{
+
+            Toast.makeText(this, "Ahora ingresa una apuesta", Toast.LENGTH_SHORT).show();
+
+        }
+
     }
 
     @OnClick(R.id.awayTeamImage)
@@ -146,6 +259,12 @@ public class ApuestaActivity extends AppCompatActivity {
         logoVisita.setBorderColor(getResources().getColor(R.color.colorAccent));
         tvEmpate.setBackgroundColor(getResources().getColor(R.color.colorTransparente));
         yaSelecciono = true;
+
+        if(!montoApuesta.getText().toString().isEmpty()){
+            cambioSeleccion();
+        }else{
+            Toast.makeText(this, "Ahora ingresa una apuesta", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -161,6 +280,12 @@ public class ApuestaActivity extends AppCompatActivity {
         tvEmpate.setBackgroundColor(getResources().getColor(R.color.colorAccent));
         yaSelecciono = true;
 
+        if(!montoApuesta.getText().toString().isEmpty()){
+            cambioSeleccion();
+        }else{
+            Toast.makeText(this, "Ahora ingresa una apuesta", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void traerPartidos(){
@@ -175,7 +300,7 @@ public class ApuestaActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                Toast.makeText(ApuestaActivity.this, "Que pedoooo "+partidoID, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ApuestaActivity.this, "Partidos actualizados", Toast.LENGTH_SHORT).show();
 
                 partidos.clear();
 
@@ -217,56 +342,109 @@ public class ApuestaActivity extends AppCompatActivity {
         Map<String, Object> apuestasVista = (Map<String, Object>) apuestasPartidoActual.get("visita");
         mBolsaVisita = (long) apuestasVista.get("bolsaVisita");
 
-        tvMomioLocal.setText(mBolsaLocal+"");
-        tvMomioEmpate.setText(mBolsaEmpate+"");
-        tvMomioVisita.setText(mBolsaVisita+"");
+
+        mFloatBolsaEmpate = mBolsaEmpate;
+        mFloatBolsaLocal = mBolsaLocal;
+        mFloatBolsaTotal = mBolsaTotal;
+        mFloatBolsaVisita = mBolsaVisita;
+
+        tvMomioLocal.setText(String.format("%.1f", ((mFloatBolsaLocal/mFloatBolsaTotal)*100.0))+"%");
+        tvMomioEmpate.setText(String.format("%.1f", ((mFloatBolsaEmpate/mFloatBolsaTotal)*100.0))+"%");
+        tvMomioVisita.setText(String.format("%.1f", ((mFloatBolsaVisita/mFloatBolsaTotal)*100.0))+"%");
+
+        Toast.makeText(this, "YA lo hice bien", Toast.LENGTH_SHORT).show();
+
+    }
+
+    public void postData() {
+
+        switch(evento){
+
+            case "local":
+                apostadoresType = "apostadoresLocal";
+                bolsaType = "bolsaLocal";
+                break;
+            case "visita":
+                apostadoresType = "apostadoresVisita";
+                bolsaType = "bolsaVisita";
+                break;
+            case "empate":
+                apostadoresType = "Empate";
+                bolsaType = "bolsaEmpate";
+                break;
+            default:
+                apostadoresType="";
+                bolsaType="";
+                break;
+
+        }
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef= database.getReference("/partidosActuales/partido"+intPartidoId+"/apuestas/"+evento+"/"+bolsaType);
+        myRef.setValue((long)(mtotalEvento+intMontoApuesta));
+
+        myRef = database.getReference("/partidosActuales/partido"+intPartidoId+"/apuestas/bolsaTotalPartido");
+        myRef.setValue(mBolsaTotal+intMontoApuesta);
+
+        myRef = database.getReference("/partidosActuales/partido"+intPartidoId+"/apuestas/"+evento+"/"+apostadoresType+"/"+userUid);
+        myRef.setValue(new Apostador(intMontoApuesta));
+
 
     }
 
     @OnClick(R.id.btnApuesta)
     public void apostar(){
 
-        if(!montoApuesta.getText().toString().isEmpty() && yaSelecciono){
+        if(!yaAposto()){
 
-            String monto = montoApuesta.getText().toString();
+            if(!montoApuesta.getText().toString().isEmpty() && yaSelecciono && intMontoApuesta>0){
 
-            pDialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("Estás seguro?")
-                    .setContentText("Estás apostando $"+monto+" por "+cadenaConfirmacionApuesta()+"!")
-                    .setCancelText("No, cancelar!")
-                    .setConfirmText("Sí, ¡échale!")
-                    .showCancelButton(true)
-                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sDialog) {
-                            Toast.makeText(ApuestaActivity.this, "Cancelaste", Toast.LENGTH_SHORT).show();
-                            sDialog.cancel();
-                        }
-                    })
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            Toast.makeText(ApuestaActivity.this, "Lo aceptaste cawn!", Toast.LENGTH_SHORT).show();
-                            sweetAlertDialog.dismiss();
-                        }
-                    });
+                String monto = montoApuesta.getText().toString();
 
-            pDialog.show();
+                pDialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Estás seguro?")
+                        .setContentText("Estás apostando $"+monto+" por "+cadenaConfirmacionApuesta()+"!")
+                        .setCancelText("No, cancelar!")
+                        .setConfirmText("Sí, ¡échale!")
+                        .showCancelButton(true)
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
 
-        }else{
+                                Toast.makeText(ApuestaActivity.this, "Cancelaste", Toast.LENGTH_SHORT).show();
+                                sDialog.cancel();
 
-            if(montoApuesta.getText().toString().isEmpty()){
+                            }
+                        })
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
 
-                Toast.makeText(this, "Ingresa un monto a apostar", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ApuestaActivity.this, "Lo aceptaste cawn!", Toast.LENGTH_SHORT).show();
+                                sweetAlertDialog.dismiss();
+
+                                postData();
+
+                            }
+                        });
+
+                pDialog.show();
 
             }else{
 
-                Toast.makeText(this, "Selecciona un evento (Presiona sobre un equipo)", Toast.LENGTH_SHORT).show();
+                if(montoApuesta.getText().toString().isEmpty()){
+
+                    Toast.makeText(this, "Ingresa un monto a apostar", Toast.LENGTH_SHORT).show();
+
+                }else{
+
+                    Toast.makeText(this, "Selecciona un evento (Presiona sobre un equipo)", Toast.LENGTH_SHORT).show();
+
+                }
 
             }
 
         }
-
 
     }
 }
