@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -76,6 +77,7 @@ public class PartidoAdapter extends RecyclerView.Adapter<PartidoAdapter.PartidoV
 
         String mLocalUrl;
         String mAwayUrl;
+        long partidoID;
 
         private View rootView;
 
@@ -92,8 +94,8 @@ public class PartidoAdapter extends RecyclerView.Adapter<PartidoAdapter.PartidoV
             matchTime.setText(partido.getHora());
             mLocalUrl = partido.getUrlLocal();
             mAwayUrl = partido.getUrlVisita();
-
-
+            partidoID = partido.getIdPartido();
+            /*
             if(!partido.getLocalTeamImageUrl().isEmpty()) {
                 Glide.with(context)
                         .load(mLocalUrl)
@@ -104,10 +106,21 @@ public class PartidoAdapter extends RecyclerView.Adapter<PartidoAdapter.PartidoV
                 Glide.with(context)
                         .load(mAwayUrl)
                         .into(awayTeamImage);
+            }*/
+
+            if(!partido.getLocalTeamImageUrl().isEmpty()) {
+                Picasso.with(context)
+                        .load(mLocalUrl)
+                        .resize(80,80)
+                        .into(localTeamImage);
             }
 
-            //localTeamImage.setImageResource(R.drawable.coyotes);
-            //awayTeamImage.setImageResource(R.drawable.coyotes2);
+            if(!partido.getAwayTeamImageUrl().isEmpty()) {
+                Picasso.with(context)
+                        .load(mAwayUrl)
+                        .resize(80,80)
+                        .into(awayTeamImage);
+            }
 
             rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -118,6 +131,7 @@ public class PartidoAdapter extends RecyclerView.Adapter<PartidoAdapter.PartidoV
                     intent.putExtra(Constants.TAG_AWAY, awayTeamName.getText().toString());
                     intent.putExtra(Constants.TAG_LOCAL_IMAGE, mLocalUrl);
                     intent.putExtra(Constants.TAG_AWAY_IMAGE, mAwayUrl);
+                    intent.putExtra(Constants.TAG_PARTIDO_ID, partidoID);
                     context.startActivity(intent);
 
                 }
