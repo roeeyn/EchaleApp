@@ -32,6 +32,15 @@
                 android:visibility="gone"
                 />
 
+            <Button
+                android:id="@+id/update_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Editar foto"
+                android:visibility="gone"
+                />
+
 
         <!-- Name Label -->
         <TextView

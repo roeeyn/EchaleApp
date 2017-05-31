@@ -60,6 +60,7 @@ public class Perfil extends AppCompatActivity {
     @BindView(R.id.profile_coins) TextView user_coins;
     @BindView(R.id.profile_image) CircleImageView user_image;
     @BindView(R.id.upload_image) Button user_upload_image;
+    @BindView(R.id.update_image) Button user_update_image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +101,7 @@ public class Perfil extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Uri uri) {
                                             Glide.with(Perfil.this).load(uri.toString()).into(user_image);
+                                            user_update_image.setVisibility(View.VISIBLE);
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
@@ -127,7 +129,7 @@ public class Perfil extends AppCompatActivity {
     }
 
 
-    @OnClick(R.id.upload_image)
+    @OnClick({R.id.upload_image, R.id.update_image})
     public void onClickUploadImage(){
         AlertDialog.Builder builder = new AlertDialog.Builder(Perfil.this);
         CharSequence [] items = {"Camara", "Almacenamiento local"};
@@ -232,6 +234,7 @@ public class Perfil extends AppCompatActivity {
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
                     Log.e("myLog", downloadUrl.toString());
                     imageUrl = downloadUrl.toString();
+                    user_upload_image.setVisibility(View.GONE);
                 }
             });
 
@@ -269,6 +272,8 @@ public class Perfil extends AppCompatActivity {
                         Uri downloadUrl = taskSnapshot.getDownloadUrl();
                         Log.e("myLog", downloadUrl.toString());
                         imageUrl = downloadUrl.toString();
+                        user_upload_image.setVisibility(View.GONE);
+                        user_update_image.setVisibility(View.VISIBLE);
                     }
                 });
 
