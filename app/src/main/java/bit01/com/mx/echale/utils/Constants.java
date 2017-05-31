@@ -8,7 +8,7 @@ import android.text.TextUtils;
 
 public class Constants {
 
-
+    public static final String SKU_COINS = "SKU_COINS";
     public static final String TAG_USER = "user";
     public static final int RC_SIGN_IN = 9001; //Request code de la conexión con google.
     public static final String LOG_TAG = "myLog"; // Tag para logs de error (Android monitor)
@@ -20,6 +20,7 @@ public class Constants {
     public static final int REQUEST_CODE_UPLOAD_PICTURE = 101;
     public static final int REQUEST_CODE_TAKE_PICTURE = 102;
     public static final int REQUEST_PERMISSION_CAMERA = 300;
+    public static final String RC_REQUEST_STORE = "REQUEST_STORE";
 
     public static final String USER_IMAGES_FOLDER = "gs://echale-ded0d.appspot.com/user_images/";
 
