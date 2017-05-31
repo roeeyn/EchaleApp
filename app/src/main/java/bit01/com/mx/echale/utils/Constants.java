@@ -16,6 +16,10 @@ public class Constants {
     public static final String TAG_AWAY = "AWAY";
     public static final String TAG_LOCAL_IMAGE = "LOCALIMAGE";
     public static final String TAG_AWAY_IMAGE = "AWAYIMAGE";
+    public static final String TAG_PARTIDO_ID = "PArtidoid";
+    public static final String TAG_SHARED_PREFERENCES = "Mis preferencias";
+    public static final String TAG_GUIA_APUESTA = "guia_apuesta";
+    public static final String TAG_GUIA_PARTIDOS = "guia_partidos";
 
 
     public static final String GOOGLE_CHOOSER = "1";
