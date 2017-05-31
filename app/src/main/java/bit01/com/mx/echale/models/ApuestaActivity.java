@@ -1,9 +1,12 @@
 package bit01.com.mx.echale.models;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -88,10 +91,14 @@ public class ApuestaActivity extends AppCompatActivity {
     String mGananciaProbable;
 
     boolean terminoMetodoConfirmacionApoostado = false;
-    boolean yaAposto = false;
+    boolean yaApostoLocal = false;
+    boolean yaApostoEmpate = false;
+    boolean yaApostoVisita = false;
 
     FirebaseAuth mAuth;
     String userUid;
+
+    boolean guiaYaMostrada = false;
 
     private List<Partido> mPartidos = new ArrayList<>();
     private long mBolsaTotal, mBolsaLocal, mBolsaEmpate,mBolsaVisita;
@@ -102,41 +109,20 @@ public class ApuestaActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("/partidosActuales/partido"+intPartidoId+"/apuestas/empate/apostadoresEmpate");
 
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+        if(!yaApostoLocal && !yaApostoVisita && !yaApostoEmpate){
 
-                if(dataSnapshot.hasChild(userUid)){
-                    yaAposto= true;
-
-                }else{
-
-                    yaAposto=false;
-
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        if(!yaAposto){
-
-            DatabaseReference myRef2 = database.getReference("/partidosActuales/partido"+intPartidoId+"/apuestas/local/apostadoresLocal");
-            myRef2.addValueEventListener(new ValueEventListener() {
+            myRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                     if(dataSnapshot.hasChild(userUid)){
+                        yaApostoEmpate= true;
+                        Toast.makeText(ApuestaActivity.this, "soy bien pinshi lento empate", Toast.LENGTH_SHORT).show();
 
-                        yaAposto= true;
 
                     }else{
 
-                        yaAposto=false;
+                        yaApostoEmpate=false;
 
                     }
 
@@ -150,7 +136,35 @@ public class ApuestaActivity extends AppCompatActivity {
 
         }
 
-        if(!yaAposto){
+        if(!yaApostoLocal && !yaApostoVisita && !yaApostoEmpate){
+
+            DatabaseReference myRef2 = database.getReference("/partidosActuales/partido"+intPartidoId+"/apuestas/local/apostadoresLocal");
+            myRef2.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    if(dataSnapshot.hasChild(userUid)){
+                        Toast.makeText(ApuestaActivity.this, "soy bien pinshi lento Local", Toast.LENGTH_SHORT).show();
+
+                        yaApostoLocal= true;
+
+                    }else{
+
+                        yaApostoLocal=false;
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+
+        if(!yaApostoLocal && !yaApostoVisita && !yaApostoEmpate){
 
             DatabaseReference myRef3 = database.getReference("/partidosActuales/partido"+intPartidoId+"/apuestas/visita/apostadoresVisita");
             myRef3.addValueEventListener(new ValueEventListener() {
@@ -158,10 +172,10 @@ public class ApuestaActivity extends AppCompatActivity {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     //Toast.makeText(ApuestaActivity.this, "yaaaaa", Toast.LENGTH_SHORT).show();
                     if(dataSnapshot.hasChild(userUid)){
-                        yaAposto= true;
-                        Toast.makeText(ApuestaActivity.this, "soy bien pinshi lento", Toast.LENGTH_SHORT).show();
+                        yaApostoVisita= true;
+                        Toast.makeText(ApuestaActivity.this, "soy bien pinshi lento visita", Toast.LENGTH_SHORT).show();
                     }else{
-                        yaAposto=false;
+                        yaApostoVisita=false;
                     }
 
                 }
@@ -176,7 +190,7 @@ public class ApuestaActivity extends AppCompatActivity {
 
 
         terminoMetodoConfirmacionApoostado = true;
-        return yaAposto;
+        return yaApostoLocal || yaApostoEmpate || yaApostoVisita;
          //TODO Arreglar la lentitud cawn
 
     }
@@ -220,13 +234,27 @@ public class ApuestaActivity extends AppCompatActivity {
         yaAposto();
         traerPartidos();
         traerDatosUsuario();
-        if(yaAposto){
+        if(yaApostoLocal || yaApostoEmpate || yaApostoVisita){
             //TODO es super lento este pedo y no lo jala
 
 
             //btnApuesta.setClickable(false);
 
         }
+
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.TAG_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        guiaYaMostrada = sharedPreferences.getBoolean(Constants.TAG_GUIA_APUESTA, false);
+
+        if(!guiaYaMostrada){
+
+            mostrarGuia();
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(Constants.TAG_GUIA_APUESTA, true);
+            editor.commit();
+
+
+        }
+
 
     }
 
@@ -443,6 +471,60 @@ public class ApuestaActivity extends AppCompatActivity {
 
     }
 
+    public void mostrarGuia(){
+
+        final TapTargetSequence sequence = new TapTargetSequence(this)
+                .targets(
+
+                        TapTarget.forView(logoLocal,"Equipos","Para seleccionar tu favorito presiona sobre él. También puedes presionar empate.")
+                                .cancelable(false)
+                                .id(1),
+
+                        TapTarget.forView(tvMomioLocal, "Distribución de las apuestas", "Aquí puedes ver la porción del dinero que se ha destinado a cada equipo.")
+                                .cancelable(false)
+                                .id(2),
+
+                        TapTarget.forView(montoApuesta, "Tu apuesta", "Aquí deberás ingresar el monto que deseas apostar.")
+                                .cancelable(false)
+                                .id(3),
+
+                        TapTarget.forView(tvPosibleGanancia, "Posible Ganancia", "Acá podrás ver lo que puedes ganar hasta el momento en caso que ganes la apuesta.")
+                                .cancelable(false)
+                                .id(4),
+
+                        TapTarget.forView(btnApuesta, "¡Échale!", "Por último presiona el botón, acepta y échale!")
+                                .cancelable(false)
+                                .id(5)
+
+
+
+                )
+                .listener(new TapTargetSequence.Listener() {
+                    // This listener will tell us when interesting(tm) events happen in regards
+                    // to the sequence
+                    @Override
+                    public void onSequenceFinish() {
+
+                        Toast.makeText(ApuestaActivity.this, "Ahora has tu primer apuesta", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    @Override
+                    public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+                        Log.d("TapTargetView", "Clicked on " + lastTarget.id());
+                    }
+
+                    @Override
+                    public void onSequenceCanceled(TapTarget lastTarget) {
+
+                        Toast.makeText(ApuestaActivity.this, "La regaste cawn!", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
+        sequence.start();
+
+    }
 
     private void updateApuestas(List<Partido> partidos) {
 
@@ -492,7 +574,7 @@ public class ApuestaActivity extends AppCompatActivity {
                 bolsaType = "bolsaVisita";
                 break;
             case "empate":
-                apostadoresType = "Empate";
+                apostadoresType = "apostadoresEmpate";
                 bolsaType = "bolsaEmpate";
                 break;
             default:
@@ -515,12 +597,15 @@ public class ApuestaActivity extends AppCompatActivity {
         myRef = database.getReference("/users/"+userUid+"/monedas");
         myRef.setValue(monedasActuales-intMontoApuesta);
 
+        myRef = database.getReference("/users/"+userUid+"/historial/partido"+intPartidoId);
+        myRef.setValue(new Apuesta(evento, (long) intMontoApuesta));
+
     }
 
     @OnClick(R.id.btnApuesta)
     public void apostar(){
 
-        if(!yaAposto){ //TODO Debe de ir si ya aposto, de todos modos se deberia de deshabilitar el boton
+        if(!(yaApostoLocal || yaApostoEmpate || yaApostoVisita)){ //TODO Debe de ir si ya aposto, de todos modos se deberia de deshabilitar el boton
 
             if(!montoApuesta.getText().toString().isEmpty() && yaSelecciono && intMontoApuesta>0 && intMontoApuesta<=monedasActuales){
 

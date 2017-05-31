@@ -1,13 +1,19 @@
 package bit01.com.mx.echale.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,6 +28,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
@@ -59,6 +67,8 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
 
     User usuarioActual;
     int monedasActuales;
+
+    boolean guiaYaMostrada = false;
 
     FirebaseAuth mAuth;
     String userUid;
@@ -124,6 +134,18 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
         username = (TextView) navigationView.getHeaderView(0).findViewById(R.id.nombreUsuarioRecyclerView);
         navigationView.setNavigationItemSelectedListener(this);
 
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.TAG_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        guiaYaMostrada = sharedPreferences.getBoolean(Constants.TAG_GUIA_PARTIDOS, false);
+
+        if(!guiaYaMostrada){
+
+            mostrarGuia(toolbar);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(Constants.TAG_GUIA_PARTIDOS, true);
+            editor.commit();
+
+
+        }
 
     }
 
@@ -254,6 +276,62 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
             }
         });
 
+    }
+
+    public void mostrarGuia(Toolbar toolbar){
+
+        final Drawable droid = ContextCompat.getDrawable(this, R.drawable.ic_cards_white_24dp);
+        final Display display = getWindowManager().getDefaultDisplay();
+
+        final Rect droidTarget = new Rect(0, 0, droid.getIntrinsicWidth() * 5, droid.getIntrinsicHeight() * 5);
+        // Using deprecated methods makes you look way cool
+        droidTarget.offset(display.getWidth() / 2, display.getHeight() / 2);
+
+        final TapTargetSequence sequence = new TapTargetSequence(this)
+                .targets(
+
+
+                        // This tap target will target the back button, we just need to pass its containing toolbar
+                        TapTarget.forToolbarNavigationIcon(toolbar, "Opciones","En este botón podrás ver las opciones de tu perfil")
+                                .cancelable(false)
+                                .id(1),
+
+                        // Likewise, this tap target will target the search button
+
+                        // You can also target the overflow button in your toolbar
+                        TapTarget.forToolbarOverflow(toolbar, "Sesión", "Aquí podrás ver las opciones de tu sesión")
+                                .cancelable(false)
+                                .id(2),
+                        // This tap target will target our droid buddy at the given target rect
+                        TapTarget.forBounds(droidTarget, "¡Échale!", "Aquí podrás ver los partidos en los que puedes apostar!")
+                                .cancelable(false)
+                                .icon(droid)
+                                .id(3)
+                )
+                .listener(new TapTargetSequence.Listener() {
+                    // This listener will tell us when interesting(tm) events happen in regards
+                    // to the sequence
+                    @Override
+                    public void onSequenceFinish() {
+
+                        Toast.makeText(PartidosRecyclerViewActvity.this, "Ahora escoge un partido", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    @Override
+                    public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+                        Log.d("TapTargetView", "Clicked on " + lastTarget.id());
+                    }
+
+                    @Override
+                    public void onSequenceCanceled(TapTarget lastTarget) {
+
+                        Toast.makeText(PartidosRecyclerViewActvity.this, "La regaste cawn!", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
+        sequence.start();
     }
 
 

@@ -14,17 +14,15 @@ package bit01.com.mx.echale.models;
 public class Apuesta {
 
     private String evento;
-    private String id_partido;
-    private String monto;
+    private long monto;
+
+    public Apuesta(String evento, long monto) {
+        this.evento = evento;
+        this.monto = monto;
+    }
 
     public Apuesta() {
         // Default constructor
-    }
-
-    public Apuesta(String evento, String id_partido, String monto) {
-        this.evento = evento;
-        this.id_partido = id_partido;
-        this.monto = monto;
     }
 
     public String getEvento() {
@@ -35,19 +33,11 @@ public class Apuesta {
         this.evento = evento;
     }
 
-    public String getId_partido() {
-        return id_partido;
-    }
-
-    public void setId_partido(String id_partido) {
-        this.id_partido = id_partido;
-    }
-
-    public String getMonto() {
+    public long getMonto() {
         return monto;
     }
 
-    public void setMonto(String monto) {
+    public void setMonto(long monto) {
         this.monto = monto;
     }
 }
