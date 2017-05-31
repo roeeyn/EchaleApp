@@ -77,7 +77,7 @@ public class PartidoAdapter extends RecyclerView.Adapter<PartidoAdapter.PartidoV
 
         String mLocalUrl;
         String mAwayUrl;
-        long partidoID;
+        String partidoID;
 
         private View rootView;
 
