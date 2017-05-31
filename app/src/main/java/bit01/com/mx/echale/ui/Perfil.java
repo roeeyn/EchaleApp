@@ -99,14 +99,18 @@ public class Perfil extends AppCompatActivity {
                                     .addOnSuccessListener(new OnSuccessListener<Uri>() {
                                         @Override
                                         public void onSuccess(Uri uri) {
-
+                                            Glide.with(Perfil.this).load(uri.toString()).into(user_image);
                                         }
-                                    });
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            user_upload_image.setVisibility(View.VISIBLE);
+                                        }
+                                    })
+                            ;
 
                         }
-
-
-
 
                         user_name.setText(user.getNombre());
                         user_coins.setText(user.getMonedas() + "");
