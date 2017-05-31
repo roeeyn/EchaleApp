@@ -16,10 +16,6 @@
             android:title="Apuestas" />
 
         <item
-            android:id="@+id/nav_coins"
-            android:icon="@drawable/ic_coin_black_24dp"
-            android:title="Créditos" />
-        <item
             android:id="@+id/nav_help"
             android:icon="@drawable/ic_help_circle_black_24dp"
             android:title="Ayuda" />
