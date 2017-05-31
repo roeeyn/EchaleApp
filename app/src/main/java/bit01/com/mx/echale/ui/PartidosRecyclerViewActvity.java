@@ -73,6 +73,7 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
     FirebaseAuth mAuth;
     String userUid;
 
+    /*
     public void poblarPartidosDummy(){
 
         mPartidos.add(new Partido(1, "Coyotes", "Necaxa", "12/10/2017", "urlLocal", "urlVista", "13:00", "pendiente"));
@@ -86,7 +87,7 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
         mPartidos.add(new Partido(9,"Chelsea", "Osasuna", "20/10/2017", "urlLocal", "urlVista", "13:00", "pendiente"));
         mPartidos.add(new Partido(10,"Atlético de Madrid", "Borussia Dortmund", "21/10/2017", "urlLocal", "urlVista", "13:00", "pendiente"));
 
-    }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

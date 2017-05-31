@@ -1,18 +1,25 @@
 package bit01.com.mx.echale.models;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.graphics.Color;
+import android.os.IBinder;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.android.vending.billing.IInAppBillingService;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.google.firebase.auth.FirebaseAuth;
@@ -83,7 +90,7 @@ public class ApuestaActivity extends AppCompatActivity {
     String apostadoresType="";
     String bolsaType="";
     String equipo = "";
-    long partidoID;
+    String partidoID;
     int intPartidoId;
 
     float mtotalEvento;
@@ -95,8 +102,24 @@ public class ApuestaActivity extends AppCompatActivity {
     boolean yaApostoEmpate = false;
     boolean yaApostoVisita = false;
 
+    IInAppBillingService mService;
+    ServiceConnection mServiceConn = new ServiceConnection() {
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name,
+                                       IBinder service) {
+            mService = IInAppBillingService.Stub.asInterface(service);
+        }
+    };
+
     FirebaseAuth mAuth;
     String userUid;
+
+    private Menu menu;
 
     boolean guiaYaMostrada = false;
 
@@ -198,10 +221,19 @@ public class ApuestaActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_apuesta);
+        setContentView(R.layout.apuesta_activity);
         ButterKnife.bind(this);
 
-        getSupportActionBar().setTitle("Échale!");
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarApuestaActivity);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle("Échale!");
+        }
+
+
 
         mAuth = FirebaseAuth.getInstance();
         userUid = mAuth.getCurrentUser().getUid();
@@ -212,8 +244,8 @@ public class ApuestaActivity extends AppCompatActivity {
             localName.setText(extras.getString(Constants.TAG_LOCAL));
             awayName.setText(extras.getString(Constants.TAG_AWAY));
 
-            partidoID = extras.getLong(Constants.TAG_PARTIDO_ID);
-            intPartidoId = (int)partidoID;
+            partidoID = extras.getString(Constants.TAG_PARTIDO_ID);
+            intPartidoId = calcularIDPartido(partidoID);
 
             if(!extras.getString(Constants.TAG_AWAY_IMAGE).isEmpty()) {
                 Picasso.with(ApuestaActivity.this)
@@ -255,7 +287,63 @@ public class ApuestaActivity extends AppCompatActivity {
 
         }
 
+        Intent serviceIntent =
+                new Intent("com.android.vending.billing.InAppBillingService.BIND");
+        serviceIntent.setPackage("com.android.vending");
+        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
 
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_apuesta_activity, menu);
+        this.menu = menu;
+
+        MenuItem coinsItem = menu.findItem(R.id.toolbar_coins_indicator);
+        coinsItem.setTitle(monedasActuales+"");
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                startActivity(new Intent(ApuestaActivity.this, PartidosRecyclerViewActvity.class));
+                break;
+            case R.id.toolbar_coins_icon:
+            case R.id.toolbar_coins_indicator:
+
+                pDialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Más monedas!")
+                        .setContentText("Quieres conseguir más monedas?")
+                        .setCancelText("No, cancelar!")
+                        .setConfirmText("Sí, ¡échale!")
+                        .showCancelButton(true)
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+
+                                Toast.makeText(ApuestaActivity.this, "Cancelaste la compra", Toast.LENGTH_SHORT).show();
+                                sDialog.cancel();
+
+                            }
+                        })
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                                //TODO agregar in app billings
+                                Toast.makeText(ApuestaActivity.this, "Aceptaste la compra cawn!", Toast.LENGTH_SHORT).show();
+                                sweetAlertDialog.dismiss();
+
+                            }
+                        });
+                pDialog.show();
+                break;
+        }
+        return true;
     }
 
     public String cadenaConfirmacionApuesta(){
@@ -459,8 +547,6 @@ public class ApuestaActivity extends AppCompatActivity {
                 monedasActuales = usuarioActual.getMonedas();
 
                 Toast.makeText(ApuestaActivity.this, "Usuario Actualizado", Toast.LENGTH_SHORT).show();
-                Toast.makeText(ApuestaActivity.this, usuarioActual.getMonedas()+"", Toast.LENGTH_SHORT).show();
-
             }
 
             @Override
@@ -526,9 +612,15 @@ public class ApuestaActivity extends AppCompatActivity {
 
     }
 
+    public int calcularIDPartido(String string){
+
+        return Integer.parseInt(string.substring(1));
+
+    }
+
     private void updateApuestas(List<Partido> partidos) {
 
-        Partido partidoActual = partidos.get((int)partidoID-1);
+        Partido partidoActual = partidos.get(calcularIDPartido(partidoID)-1);
 
         Map<String, Object> apuestasPartidoActual = partidoActual.getApuestas();
 
@@ -597,9 +689,17 @@ public class ApuestaActivity extends AppCompatActivity {
         myRef = database.getReference("/users/"+userUid+"/monedas");
         myRef.setValue(monedasActuales-intMontoApuesta);
 
-        myRef = database.getReference("/users/"+userUid+"/historial/partido"+intPartidoId);
+        myRef = database.getReference("/users/"+userUid+"/historial/p"+intPartidoId);
         myRef.setValue(new Apuesta(evento, (long) intMontoApuesta));
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mService != null) {
+            unbindService(mServiceConn);
+        }
     }
 
     @OnClick(R.id.btnApuesta)
@@ -634,6 +734,18 @@ public class ApuestaActivity extends AppCompatActivity {
                                 sweetAlertDialog.dismiss();
 
                                 postData();
+                                SweetAlertDialog pDialog2 = new SweetAlertDialog(ApuestaActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+                                        .setTitleText("Perfecto!")
+                                        .setContentText("Apuesta hecha con éxito.")
+                                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                startActivity(new Intent(ApuestaActivity.this,PartidosRecyclerViewActvity.class));
+
+                                            }
+                                        });
+                                pDialog2.show();
+
 
                             }
                         });

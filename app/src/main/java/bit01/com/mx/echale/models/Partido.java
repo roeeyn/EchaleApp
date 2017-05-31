@@ -15,7 +15,7 @@ import java.util.Map;
 public class Partido {
 
     Map<String, Object> apuestas = new HashMap<String, Object>();
-    private long idPartido;
+    private String idPartido;
     private String nombreLocal;
     private String nombreVisita;
     private String fecha;
@@ -96,9 +96,19 @@ public class Partido {
     }
 
     public Partido() {
+
     }
 
-    public Partido(long idPartido, String nombreLocal, String nombreVisita, String fecha, String urlLocal, String urlVisita, String hora, String status) {
+    public String getIdPartido() {
+        return idPartido;
+    }
+
+    public void setIdPartido(String idPartido) {
+        this.idPartido = idPartido;
+    }
+
+    public Partido(Map<String, Object> apuestas, String idPartido, String nombreLocal, String nombreVisita, String fecha, String urlLocal, String urlVisita, String hora, String status) {
+        this.apuestas = apuestas;
         this.idPartido = idPartido;
         this.nombreLocal = nombreLocal;
         this.nombreVisita = nombreVisita;
@@ -115,14 +125,6 @@ public class Partido {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public long getIdPartido() {
-        return idPartido;
-    }
-
-    public void setIdPartido(long idPartido) {
-        this.idPartido = idPartido;
     }
 
     public String getTime() {
