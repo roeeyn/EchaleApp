@@ -1,5 +1,6 @@
 package bit01.com.mx.echale.models;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import bit01.com.mx.echale.R;
+import bit01.com.mx.echale.ui.PartidosRecyclerViewActvity;
 import bit01.com.mx.echale.utils.Constants;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,6 +72,9 @@ public class ApuestaActivity extends AppCompatActivity {
 
     SweetAlertDialog pDialog;
 
+    User usuarioActual;
+    int monedasActuales;
+
     Boolean yaSelecciono = false, alertaSeleccionMostrada=false;
     String evento = "";
     String apostadoresType="";
@@ -82,6 +87,9 @@ public class ApuestaActivity extends AppCompatActivity {
     int intMontoApuesta;
     String mGananciaProbable;
 
+    boolean terminoMetodoConfirmacionApoostado = false;
+    boolean yaAposto = false;
+
     FirebaseAuth mAuth;
     String userUid;
 
@@ -92,8 +100,84 @@ public class ApuestaActivity extends AppCompatActivity {
     public boolean yaAposto(){
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("/");
-        return false;
+        DatabaseReference myRef = database.getReference("/partidosActuales/partido"+intPartidoId+"/apuestas/empate/apostadoresEmpate");
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.hasChild(userUid)){
+                    yaAposto= true;
+
+                }else{
+
+                    yaAposto=false;
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        if(!yaAposto){
+
+            DatabaseReference myRef2 = database.getReference("/partidosActuales/partido"+intPartidoId+"/apuestas/local/apostadoresLocal");
+            myRef2.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    if(dataSnapshot.hasChild(userUid)){
+
+                        yaAposto= true;
+
+                    }else{
+
+                        yaAposto=false;
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+
+        if(!yaAposto){
+
+            DatabaseReference myRef3 = database.getReference("/partidosActuales/partido"+intPartidoId+"/apuestas/visita/apostadoresVisita");
+            myRef3.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    //Toast.makeText(ApuestaActivity.this, "yaaaaa", Toast.LENGTH_SHORT).show();
+                    if(dataSnapshot.hasChild(userUid)){
+                        yaAposto= true;
+                        Toast.makeText(ApuestaActivity.this, "soy bien pinshi lento", Toast.LENGTH_SHORT).show();
+                    }else{
+                        yaAposto=false;
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+
+
+        terminoMetodoConfirmacionApoostado = true;
+        return yaAposto;
+         //TODO Arreglar la lentitud cawn
 
     }
 
@@ -133,7 +217,16 @@ public class ApuestaActivity extends AppCompatActivity {
 
         }
 
+        yaAposto();
         traerPartidos();
+        traerDatosUsuario();
+        if(yaAposto){
+            //TODO es super lento este pedo y no lo jala
+
+
+            //btnApuesta.setClickable(false);
+
+        }
 
     }
 
@@ -325,6 +418,32 @@ public class ApuestaActivity extends AppCompatActivity {
 
     }
 
+    public void traerDatosUsuario(){
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("/users/"+userUid);
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                usuarioActual = dataSnapshot.getValue(User.class);
+                monedasActuales = usuarioActual.getMonedas();
+
+                Toast.makeText(ApuestaActivity.this, "Usuario Actualizado", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ApuestaActivity.this, usuarioActual.getMonedas()+"", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+
     private void updateApuestas(List<Partido> partidos) {
 
         Partido partidoActual = partidos.get((int)partidoID-1);
@@ -352,7 +471,11 @@ public class ApuestaActivity extends AppCompatActivity {
         tvMomioEmpate.setText(String.format("%.1f", ((mFloatBolsaEmpate/mFloatBolsaTotal)*100.0))+"%");
         tvMomioVisita.setText(String.format("%.1f", ((mFloatBolsaVisita/mFloatBolsaTotal)*100.0))+"%");
 
-        Toast.makeText(this, "YA lo hice bien", Toast.LENGTH_SHORT).show();
+        if(!montoApuesta.getText().toString().isEmpty() && yaSelecciono){
+
+            cambioSeleccion();
+
+        }
 
     }
 
@@ -389,15 +512,17 @@ public class ApuestaActivity extends AppCompatActivity {
         myRef = database.getReference("/partidosActuales/partido"+intPartidoId+"/apuestas/"+evento+"/"+apostadoresType+"/"+userUid);
         myRef.setValue(new Apostador(intMontoApuesta));
 
+        myRef = database.getReference("/users/"+userUid+"/monedas");
+        myRef.setValue(monedasActuales-intMontoApuesta);
 
     }
 
     @OnClick(R.id.btnApuesta)
     public void apostar(){
 
-        if(!yaAposto()){
+        if(!yaAposto){ //TODO Debe de ir si ya aposto, de todos modos se deberia de deshabilitar el boton
 
-            if(!montoApuesta.getText().toString().isEmpty() && yaSelecciono && intMontoApuesta>0){
+            if(!montoApuesta.getText().toString().isEmpty() && yaSelecciono && intMontoApuesta>0 && intMontoApuesta<=monedasActuales){
 
                 String monto = montoApuesta.getText().toString();
 
@@ -436,13 +561,53 @@ public class ApuestaActivity extends AppCompatActivity {
 
                     Toast.makeText(this, "Ingresa un monto a apostar", Toast.LENGTH_SHORT).show();
 
-                }else{
+                }else if(!yaSelecciono){
 
                     Toast.makeText(this, "Selecciona un evento (Presiona sobre un equipo)", Toast.LENGTH_SHORT).show();
+
+                }else if(intMontoApuesta <=0){
+
+                    Toast.makeText(this, "La apuesta debe de ser mayor a cero", Toast.LENGTH_SHORT).show();
+
+                } else if(intMontoApuesta > monedasActuales){
+
+                    pDialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Sin Monedas Suficientes")
+                            .setContentText("Quieres conseguir más monedas?")
+                            .setCancelText("No, cancelar!")
+                            .setConfirmText("Sí, ¡échale!")
+                            .showCancelButton(true)
+                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sDialog) {
+
+                                    Toast.makeText(ApuestaActivity.this, "Cancelaste la compra", Toast.LENGTH_SHORT).show();
+                                    sDialog.cancel();
+
+                                }
+                            })
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                                    //TODO agregar in app billings
+                                    Toast.makeText(ApuestaActivity.this, "Aceptaste la compra cawn!", Toast.LENGTH_SHORT).show();
+                                    sweetAlertDialog.dismiss();
+
+                                }
+                            });
+                    pDialog.show();
 
                 }
 
             }
+
+        }else{
+
+            pDialog = new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText("Parece que ya apostaste...")
+                    .setContentText("No podrás apostar de nuevo en este partido aunque puedes ver la información ");
+            pDialog.show();
 
         }
 

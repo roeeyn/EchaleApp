@@ -122,9 +122,6 @@ public class PartidoAdapter extends RecyclerView.Adapter<PartidoAdapter.PartidoV
                         .into(awayTeamImage);
             }
 
-            //localTeamImage.setImageResource(R.drawable.coyotes);
-            //awayTeamImage.setImageResource(R.drawable.coyotes2);
-
             rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bit01.com.mx.echale.R;
+import bit01.com.mx.echale.models.ApuestaActivity;
 import bit01.com.mx.echale.models.Partido;
 import bit01.com.mx.echale.models.User;
 import bit01.com.mx.echale.utils.Constants;
@@ -55,6 +56,12 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
 
     ImageView ivProfilePic;
     TextView username;
+
+    User usuarioActual;
+    int monedasActuales;
+
+    FirebaseAuth mAuth;
+    String userUid;
 
     public void poblarPartidosDummy(){
 
@@ -89,6 +96,11 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
                         })
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
+
+        mAuth = FirebaseAuth.getInstance();
+        userUid = mAuth.getCurrentUser().getUid();
+
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -163,7 +175,6 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
-
 
 
     public void signOut(){
