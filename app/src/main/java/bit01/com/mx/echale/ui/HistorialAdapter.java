@@ -45,7 +45,7 @@ public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.Hist
     @Override
     public void onBindViewHolder(HistorialViewHolder holder, int position) {
         Historial promocion = apuestas.get(position);
-        holder.bindHistorial(promocion);
+        holder.bindHistorial(promocion, position+1);
     }
 
     @Override
@@ -73,6 +73,9 @@ public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.Hist
         @BindView(R.id.historial_evento)
         TextView evento;
 
+        @BindView(R.id.historia_apuesta)
+        TextView apuestaNumero;
+
         @BindView(R.id.historial_monto)
         TextView monto;
 
@@ -83,12 +86,13 @@ public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.Hist
             ButterKnife.bind(this, itemView);
         }
 
-        public void bindHistorial(Historial historial){
+        public void bindHistorial(Historial historial, int numeroApuesta){
             localTeamName.setText(historial.getNombreLocal());
             awayTeamName.setText(historial.getNombreVisita());
             matchDate.setText(historial.getFecha());
             evento.setText("Evento: " + historial.getEvento());
             monto.setText("Monto: " + historial.getMonto());
+            apuestaNumero.setText("Apuesta #" + numeroApuesta);
 
             if (!historial.getUriLocal().isEmpty()) {
 
