@@ -276,7 +276,7 @@ public class Login extends AppCompatActivity {
     public void saveDataOnFirebase(String name, String email, String photoUrl){
 
         User user = new User(
-                name, email, 300, "", null, photoUrl
+                name, email, "", 300, null, photoUrl
         );
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();

@@ -10,7 +10,7 @@ public class User {
 
     private String nombre;
     private String mail;
-    private String urlPicture;
+    private String Fecha_nacimiento;
     private int monedas;
     private Historial historial;
     private String photoUrl;
@@ -19,23 +19,21 @@ public class User {
         // Default constructor
     }
 
-    public User(String nombre, String mail, int monedas, Historial historial, String photoUrl) {
+    public User(String nombre, String mail, String fecha_nacimiento, int monedas, Historial historial, String photoUrl) {
         this.nombre = nombre;
         this.mail = mail;
+        Fecha_nacimiento = fecha_nacimiento;
         this.monedas = monedas;
         this.historial = historial;
         this.photoUrl = photoUrl;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "nombre='" + nombre + '\'' +
-                ", mail='" + mail + '\'' +
-                ", photoUrl ='" +  photoUrl + '\'' +
-                ", monedas=" + monedas +
-                ", historial=" + historial +
-                '}';
+    public String getFecha_nacimiento() {
+        return Fecha_nacimiento;
+    }
+
+    public void setFecha_nacimiento(String fecha_nacimiento) {
+        Fecha_nacimiento = fecha_nacimiento;
     }
 
     public String getNombre() {
