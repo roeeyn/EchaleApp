@@ -88,7 +88,7 @@ public class Registro extends AppCompatActivity  implements DatePickerDialog.OnD
         final String email = inputEmail.getText().toString().trim();
         final String name = inputName.getText().toString().trim();
         final String lastName = inputLastName.getText().toString().trim();
-        final String birthDate = inputBirthDate.getText().toString().trim();
+        String birthDate = inputBirthDate.getText().toString().trim();
         final String password = inputPassword.getText().toString().trim();
         String confirmPassword = inputConfirmPassword.getText().toString().trim();
 
@@ -116,7 +116,7 @@ public class Registro extends AppCompatActivity  implements DatePickerDialog.OnD
                                 if (task.getResult().getProviders().size() > 0)
                                     Toast.makeText(Registro.this, "Ya existe una cuenta con este correo", Toast.LENGTH_SHORT).show();
                                 else
-                                    saveUserData(name, lastName, email, birthDate, password);
+                                    saveUserData(name, lastName, email, password);
                             }else{
                                 Toast.makeText(Registro.this, "No se pudo realizar la tarea", Toast.LENGTH_SHORT).show();
                             }
@@ -131,7 +131,7 @@ public class Registro extends AppCompatActivity  implements DatePickerDialog.OnD
     }
 
 
-    public void saveUserData(final String name, final String lastName, final String email, final String birthDate, final String password){
+    public void saveUserData(final String name, final String lastName, final String email, final String password){
         mProgressDialog.setTitle("Creando cuenta");
         mProgressDialog.setMessage("Esta acción puede tomar algunos segundos..");
         mProgressDialog.show();
@@ -141,7 +141,7 @@ public class Registro extends AppCompatActivity  implements DatePickerDialog.OnD
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if( task.isSuccessful()  ) {
-                            saveDataOnFirebase(name, lastName, email, birthDate, "");
+                            saveDataOnFirebase(name, lastName, email, "");
                             Toast.makeText(Registro.this, "Registrado exitosamente", Toast.LENGTH_SHORT).show();
                             mProgressDialog.hide();
                             startActivity(new Intent(Registro.this, PartidosRecyclerViewActvity.class));
@@ -153,10 +153,11 @@ public class Registro extends AppCompatActivity  implements DatePickerDialog.OnD
                 });
     }
 
-    public void saveDataOnFirebase(String name, String lastName, String email, String birthDate, String photoUrl){
+    public void saveDataOnFirebase(String name, String lastName, String email, String photoUrl){
 
         User user = new User(
-                name + " " + lastName, email, 300, birthDate, null, ""
+                name + " " + lastName, email, 300, null, ""
+
         );
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();

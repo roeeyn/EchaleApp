@@ -39,7 +39,8 @@
         <activity
             android:name=".ui.RestorePassword"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.Perfil"></activity>
+        <activity android:name=".ui.Perfil" />
+        <activity android:name=".ui.HistorialRVActivity"></activity>
     </application>
 
 </manifest>
