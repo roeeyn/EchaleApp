@@ -11,6 +11,7 @@ public class User {
     private String nombre;
     private String mail;
     private int monedas;
+    private String fecha_nacimiento;
     private Historial historial;
     private String photoUrl;
 
@@ -18,11 +19,11 @@ public class User {
         // Default constructor
     }
 
-
-    public User(String nombre, String mail, int monedas, Historial historial, String photoUrl) {
+    public User(String nombre, String mail, int monedas, String fecha_nacimiento, Historial historial, String photoUrl) {
         this.nombre = nombre;
         this.mail = mail;
         this.monedas = monedas;
+        this.fecha_nacimiento = fecha_nacimiento;
         this.historial = historial;
         this.photoUrl = photoUrl;
     }
@@ -65,5 +66,13 @@ public class User {
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    public String getFecha_nacimiento() {
+        return fecha_nacimiento;
+    }
+
+    public void setFecha_nacimiento(String fecha_nacimiento) {
+        this.fecha_nacimiento = fecha_nacimiento;
     }
 }

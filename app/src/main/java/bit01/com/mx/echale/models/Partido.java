@@ -12,6 +12,12 @@ import java.util.Map;
  * Created by ericklara on 24/05/17.
  */
 
+
+/**
+ * Clase Partido para el Recycler View que muestra los partidos
+
+ */
+
 public class Partido {
 
     Map<String, Object> apuestas = new HashMap<String, Object>();

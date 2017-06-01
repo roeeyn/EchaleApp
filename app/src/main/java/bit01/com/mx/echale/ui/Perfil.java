@@ -116,6 +116,7 @@ public class Perfil extends AppCompatActivity {
 
                         user_name.setText(user.getNombre());
                         user_coins.setText(user.getMonedas() + "");
+                        user_birth_date.setText(user.getFecha_nacimiento());
                         user_email.setText(user.getMail());
                         // ...
                     }
@@ -277,16 +278,12 @@ public class Perfil extends AppCompatActivity {
                     }
                 });
 
-
-
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 Toast.makeText(Perfil.this, "Something went wrong", Toast.LENGTH_LONG).show();
             }
         }else
             Log.e(Constants.LOG_TAG, "Error culero");
-
-
     }
 
 }
