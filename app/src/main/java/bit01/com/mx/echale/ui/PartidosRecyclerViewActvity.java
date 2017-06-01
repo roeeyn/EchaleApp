@@ -231,7 +231,7 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
         if (id == R.id.nav_profile) {
             startActivity(new Intent(PartidosRecyclerViewActvity.this, Perfil.class));
         } else if (id == R.id.nav_bet) {
-
+            startActivity(new Intent(PartidosRecyclerViewActvity.this, HistorialRVActivity.class));
         } else if (id == R.id.nav_help) {
 
         }
