@@ -279,6 +279,8 @@ public class Login extends AppCompatActivity {
                 name, email, "", 300, null, photoUrl
         );
 
+
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users");
         myRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user);
