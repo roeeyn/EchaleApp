@@ -3,6 +3,7 @@ package bit01.com.mx.echale.models;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.IBinder;
@@ -37,6 +38,11 @@ import java.util.Map;
 import bit01.com.mx.echale.R;
 import bit01.com.mx.echale.ui.PartidosRecyclerViewActvity;
 import bit01.com.mx.echale.utils.Constants;
+import bit01.com.mx.echale.utils.IabBroadcastReceiver;
+import bit01.com.mx.echale.utils.IabHelper;
+import bit01.com.mx.echale.utils.IabResult;
+import bit01.com.mx.echale.utils.Inventory;
+import bit01.com.mx.echale.utils.Purchase;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -45,7 +51,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class ApuestaActivity extends AppCompatActivity {
+public class ApuestaActivity extends AppCompatActivity implements IabBroadcastReceiver.IabBroadcastListener{
 
     @BindView(R.id.momioLocal)
     TextView tvMomioLocal;
@@ -80,6 +86,12 @@ public class ApuestaActivity extends AppCompatActivity {
     @BindView(R.id.tvEmpate)
     TextView tvEmpate;
 
+    // The helper object
+    IabHelper mHelper;
+
+    // Provides purchase notification while this app is running
+    IabBroadcastReceiver mBroadcastReceiver;
+
     SweetAlertDialog pDialog;
 
     User usuarioActual;
@@ -96,6 +108,8 @@ public class ApuestaActivity extends AppCompatActivity {
     float mtotalEvento;
     int intMontoApuesta;
     String mGananciaProbable;
+
+    public static final String TAG ="LogVerijas";
 
     boolean terminoMetodoConfirmacionApoostado = false;
     boolean yaApostoLocal = false;
@@ -224,6 +238,52 @@ public class ApuestaActivity extends AppCompatActivity {
         setContentView(R.layout.apuesta_activity);
         ButterKnife.bind(this);
 
+        String base64EncodedPublicKey = "123456";
+
+        Log.d("logVerijas", "Creating IAB helper.");
+        mHelper = new IabHelper(this, base64EncodedPublicKey);
+
+        mHelper.enableDebugLogging(true);
+
+        // Start setup. This is asynchronous and the specified listener
+        // will be called once setup completes.
+        Log.d("LogVerijas", "Starting setup.");
+        mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+            public void onIabSetupFinished(IabResult result) {
+                Log.d("LogVerijas", "Setup finished.");
+
+                if (!result.isSuccess()) {
+                    // Oh noes, there was a problem.
+                    Toast.makeText(ApuestaActivity.this, "Problem setting up in-app billing: " + result, Toast.LENGTH_SHORT).show();
+                    //complain("Problem setting up in-app billing: " + result);
+                    return;
+                }
+
+                // Have we been disposed of in the meantime? If so, quit.
+                if (mHelper == null) return;
+
+                // Important: Dynamically register for broadcast messages about updated purchases.
+                // We register the receiver here instead of as a <receiver> in the Manifest
+                // because we always call getPurchases() at startup, so therefore we can ignore
+                // any broadcasts sent while the app isn't running.
+                // Note: registering this listener in an Activity is a bad idea, but is done here
+                // because this is a SAMPLE. Regardless, the receiver must be registered after
+                // IabHelper is setup, but before first call to getPurchases().
+                mBroadcastReceiver = new IabBroadcastReceiver(ApuestaActivity.this);
+                IntentFilter broadcastFilter = new IntentFilter(IabBroadcastReceiver.ACTION);
+                registerReceiver(mBroadcastReceiver, broadcastFilter);
+
+                // IAB is fully set up. Now, let's get an inventory of stuff we own.
+                Log.d("LogVerijas", "Setup successful. Querying inventory.");
+                try {
+                    mHelper.queryInventoryAsync(mGotInventoryListener);
+                } catch (IabHelper.IabAsyncInProgressException e) {
+                    Toast.makeText(ApuestaActivity.this, "Error querying inventory. Another async operation in progress.", Toast.LENGTH_SHORT).show();
+                    //complain("Error querying inventory. Another async operation in progress.");
+                }
+            }
+        });
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarApuestaActivity);
         setSupportActionBar(toolbar);
 
@@ -292,8 +352,78 @@ public class ApuestaActivity extends AppCompatActivity {
         serviceIntent.setPackage("com.android.vending");
         bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
 
-
     }
+
+    // Listener that's called when we finish querying the items and subscriptions we own
+    IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
+        public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
+            Log.d(TAG, "Query inventory finished.");
+
+            // Have we been disposed of in the meantime? If so, quit.
+            if (mHelper == null) return;
+
+            // Is it a failure?
+            if (result.isFailure()) {
+                Toast.makeText(ApuestaActivity.this, "Failed to query inventory: " + result, Toast.LENGTH_SHORT).show();
+                //complain("Failed to query inventory: " + result);
+                return;
+            }
+
+            Log.d(TAG, "Query inventory was successful.");
+
+            /*
+             * Check for items we own. Notice that for each purchase, we check
+             * the developer payload to see if it's correct! See
+             * verifyDeveloperPayload().
+             */
+
+            // Do we have the premium upgrade?
+            /*
+            Purchase premiumPurchase = inventory.getPurchase(SKU_PREMIUM);
+            mIsPremium = (premiumPurchase != null && verifyDeveloperPayload(premiumPurchase));
+            Log.d(TAG, "User is " + (mIsPremium ? "PREMIUM" : "NOT PREMIUM"));*/
+
+
+            /*
+            // First find out which subscription is auto renewing
+            Purchase gasMonthly = inventory.getPurchase(SKU_INFINITE_GAS_MONTHLY);
+            Purchase gasYearly = inventory.getPurchase(SKU_INFINITE_GAS_YEARLY);
+            if (gasMonthly != null && gasMonthly.isAutoRenewing()) {
+                mInfiniteGasSku = SKU_INFINITE_GAS_MONTHLY;
+                mAutoRenewEnabled = true;
+            } else if (gasYearly != null && gasYearly.isAutoRenewing()) {
+                mInfiniteGasSku = SKU_INFINITE_GAS_YEARLY;
+                mAutoRenewEnabled = true;
+            } else {
+                mInfiniteGasSku = "";
+                mAutoRenewEnabled = false;
+            }
+
+            // The user is subscribed if either subscription exists, even if neither is auto
+            // renewing
+            mSubscribedToInfiniteGas = (gasMonthly != null && verifyDeveloperPayload(gasMonthly))
+                    || (gasYearly != null && verifyDeveloperPayload(gasYearly));
+            Log.d(TAG, "User " + (mSubscribedToInfiniteGas ? "HAS" : "DOES NOT HAVE")
+                    + " infinite gas subscription.");
+            if (mSubscribedToInfiniteGas) mTank = TANK_MAX;
+
+            // Check for gas delivery -- if we own gas, we should fill up the tank immediately
+            Purchase gasPurchase = inventory.getPurchase(SKU_GAS);
+            if (gasPurchase != null && verifyDeveloperPayload(gasPurchase)) {
+                Log.d(TAG, "We have gas. Consuming it.");
+                try {
+                    mHelper.consumeAsync(inventory.getPurchase(SKU_GAS), mConsumeFinishedListener);
+                } catch (IabAsyncInProgressException e) {
+                    complain("Error consuming gas. Another async operation in progress.");
+                }
+                return;
+            }*/
+
+            //updateUi();
+            //setWaitScreen(false);
+            Log.d(TAG, "Initial inventory query finished; enabling main UI.");
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -807,6 +937,11 @@ public class ApuestaActivity extends AppCompatActivity {
             pDialog.show();
 
         }
+
+    }
+
+    @Override
+    public void receivedBroadcast() {
 
     }
 }
