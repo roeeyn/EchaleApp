@@ -16,6 +16,7 @@ public class Constants {
     public static final String TAG_AWAY = "AWAY";
     public static final String TAG_LOCAL_IMAGE = "LOCALIMAGE";
     public static final String TAG_AWAY_IMAGE = "AWAYIMAGE";
+    public static final String TAG_DATE = "TAG_DATE";
 
     public static final int REQUEST_CODE_UPLOAD_PICTURE = 101;
     public static final int REQUEST_CODE_TAKE_PICTURE = 102;

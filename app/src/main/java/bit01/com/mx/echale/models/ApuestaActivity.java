@@ -105,6 +105,10 @@ public class ApuestaActivity extends AppCompatActivity implements IabBroadcastRe
     String partidoID;
     int intPartidoId;
 
+    String urlLocal;
+    String urlVisita;
+
+    String mFechaPartido;
     float mtotalEvento;
     int intMontoApuesta;
     String mGananciaProbable;
@@ -307,11 +311,14 @@ public class ApuestaActivity extends AppCompatActivity implements IabBroadcastRe
             partidoID = extras.getString(Constants.TAG_PARTIDO_ID);
             intPartidoId = calcularIDPartido(partidoID);
 
+
             if(!extras.getString(Constants.TAG_AWAY_IMAGE).isEmpty()) {
                 Picasso.with(ApuestaActivity.this)
                         .load(extras.getString(Constants.TAG_AWAY_IMAGE))
                         .resize(100,100)
                         .into(logoVisita);
+
+                urlVisita = extras.getString(Constants.TAG_AWAY_IMAGE);
             }
 
             if(!extras.getString(Constants.TAG_LOCAL_IMAGE).isEmpty()) {
@@ -319,7 +326,10 @@ public class ApuestaActivity extends AppCompatActivity implements IabBroadcastRe
                         .load(extras.getString(Constants.TAG_LOCAL_IMAGE))
                         .resize(100,100)
                         .into(logoLocal);
+
+                urlLocal = extras.getString(Constants.TAG_LOCAL_IMAGE);
             }
+            mFechaPartido = extras.getString(Constants.TAG_DATE);
 
         }
 
@@ -820,7 +830,7 @@ public class ApuestaActivity extends AppCompatActivity implements IabBroadcastRe
         myRef.setValue(monedasActuales-intMontoApuesta);
 
         myRef = database.getReference("/users/"+userUid+"/historial/p"+intPartidoId);
-        myRef.setValue(new Apuesta(evento, (long) intMontoApuesta));
+        myRef.setValue(new Historial(evento, (long)intMontoApuesta, localName.getText().toString(), urlLocal, awayName.getText().toString(), urlVisita, mFechaPartido));
 
     }
 

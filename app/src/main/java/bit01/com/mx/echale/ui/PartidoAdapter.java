@@ -132,6 +132,7 @@ public class PartidoAdapter extends RecyclerView.Adapter<PartidoAdapter.PartidoV
                     intent.putExtra(Constants.TAG_LOCAL_IMAGE, mLocalUrl);
                     intent.putExtra(Constants.TAG_AWAY_IMAGE, mAwayUrl);
                     intent.putExtra(Constants.TAG_PARTIDO_ID, partidoID);
+                    intent.putExtra(Constants.TAG_DATE, matchDate.getText().toString());
                     context.startActivity(intent);
 
                 }
