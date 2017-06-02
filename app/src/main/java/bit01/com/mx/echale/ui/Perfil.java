@@ -10,10 +10,12 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v13.app.ActivityCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -73,7 +75,28 @@ public class Perfil extends AppCompatActivity {
         // Inicialización de la instancia de FireBase
         mAuth = FirebaseAuth.getInstance();
 
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle("Perfil");
+        }
+
         showData();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+
+            case android.R.id.home:
+                startActivity(new Intent(Perfil.this, PartidosRecyclerViewActvity.class));
+                break;
+
+        }
+
+        return true;
+
     }
 
 

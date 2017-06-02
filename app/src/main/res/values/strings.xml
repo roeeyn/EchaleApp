@@ -14,4 +14,9 @@
     <string name="confirm_password_placeholder">Confirm Password</string>
 
     <string name="action_sign_out">Cerrar sesión</string>
+
+    <string name="textoAyuda"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla luctus nibh ac lacus viverra, luctus fermentum nisl eleifend. Integer faucibus ornare tincidunt. Proin pharetra consectetur ipsum non hendrerit. Integer consectetur urna purus, a maximus urna venenatis et. Aenean vel enim ut mi tincidunt ullamcorper et eu nisl. In augue tellus, malesuada ut varius id, tristique non est. Sed imperdiet dui ac odio sodales, id eleifend risus venenatis.
+
+Nullam mollis lectus ornare feugiat tempor. Mauris fermentum velit risus, id aliquam neque tincidunt a. Nullam vel lectus diam. Nulla erat ipsum, accumsan ac mauris vel, gravida vehicula justo. Nulla tempor neque et nibh egestas, sit amet tincidunt orci fermentum. Quisque tristique nulla vel risus elementum, ac tempor nunc commodo. Suspendisse dapibus scelerisque felis, sed commodo mi lobortis ut. Etiam lorem nisi, mollis suscipit euismod vitae, gravida at libero. Donec tristique egestas dapibus. Nam porta et quam id eleifend. Maecenas vulputate finibus eros, eget rhoncus nisi. </string>
+
 </resources>

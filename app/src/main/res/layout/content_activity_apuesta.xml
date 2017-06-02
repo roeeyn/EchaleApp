@@ -132,6 +132,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="50"
+                android:layout_marginLeft="60dp"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:text="Apostar: $"
@@ -141,6 +142,7 @@
                 android:textSize="20sp"
                 android:layout_width="0dp"
                 android:id="@+id/montoApuesta"
+                android:layout_marginRight="60dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="50"
                 android:inputType="number"/>

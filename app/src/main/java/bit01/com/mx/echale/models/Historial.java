@@ -15,12 +15,13 @@ public class Historial {
     private String nombreVisita;
     private String uriVisita;
     private String fecha;
+    private String resultado;
 
     public Historial() {
         // Default constructor
     }
 
-    public Historial(String evento, long monto, String nombreLocal, String uriLocal, String nombreVisita, String uriVisita, String fecha) {
+    public Historial(String evento, long monto, String nombreLocal, String uriLocal, String nombreVisita, String uriVisita, String fecha,String resultado) {
         this.evento = evento;
         this.monto = monto;
         this.nombreLocal = nombreLocal;
@@ -28,8 +29,16 @@ public class Historial {
         this.nombreVisita = nombreVisita;
         this.uriVisita = uriVisita;
         this.fecha = fecha;
+        this.resultado = resultado;
     }
 
+    public String getResultado() {
+        return resultado;
+    }
+
+    public void setResultado(String resultado) {
+        this.resultado = resultado;
+    }
 
     public String getEvento() {
         return evento;
