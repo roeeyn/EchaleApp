@@ -76,7 +76,7 @@ public class Perfil extends AppCompatActivity {
         showData();
     }
 
-
+    // Mostrar la información del usuario en la vista
     public void showData(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();

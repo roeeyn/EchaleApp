@@ -157,8 +157,8 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
         mGoogleApiClient.connect();
     }
 
+    // Agregar RecyclerView a la vista
     public void settingRecyclerView(){
-
         PartidoAdapter partidoAdapter = new PartidoAdapter(mPartidos);
         recyclerView.setLayoutManager(new LinearLayoutManager(PartidosRecyclerViewActvity.this));
         recyclerView.setAdapter(partidoAdapter);
@@ -199,7 +199,7 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-
+    // Cerrar sesión del usuario.
     public void signOut(){
         // Cierra la sesión de firebase
         FirebaseAuth.getInstance().signOut();
@@ -241,7 +241,7 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
         return true;
     }
 
-
+    // Recibir los partidos de Firebase
     public void traerPartidos(){
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -277,6 +277,7 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
 
     }
 
+    // Mostrar la guía de cómo apostar
     public void mostrarGuia(Toolbar toolbar){
 
         final Drawable droid = ContextCompat.getDrawable(this, R.drawable.ic_cards_white_24dp);
