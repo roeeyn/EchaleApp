@@ -8,6 +8,7 @@ import java.util.List;
 
 public class User {
 
+    /// Class variables
     private String nombre;
     private String mail;
     private String Fecha_nacimiento;
@@ -19,6 +20,7 @@ public class User {
         // Default constructor
     }
 
+    // Constructor
     public User(String nombre, String mail, String fecha_nacimiento, int monedas, Historial historial, String photoUrl) {
         this.nombre = nombre;
         this.mail = mail;
@@ -27,6 +29,8 @@ public class User {
         this.historial = historial;
         this.photoUrl = photoUrl;
     }
+
+    // Getters and setters
 
     public String getFecha_nacimiento() {
         return Fecha_nacimiento;

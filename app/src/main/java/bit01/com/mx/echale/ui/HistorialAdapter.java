@@ -27,10 +27,12 @@ public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.Hist
     private List<Historial> apuestas;
     private Context context;
 
+    // HistorialAdapter constructor
     public HistorialAdapter(List<Historial> apuestas) {
         this.apuestas = apuestas;
     }
 
+    // Métodos implementados por RecyclerView.Adapter
     @Override
     public HistorialViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
@@ -52,6 +54,7 @@ public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.Hist
         return apuestas.size();
     }
 
+    // ViewHolder para el Recycler view de las apuestas
     public class HistorialViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.historial_local_team_image)
@@ -89,6 +92,7 @@ public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.Hist
             ButterKnife.bind(this, itemView);
         }
 
+        // Link with the item (item_historial)
         public void bindHistorial(Historial historial, int numeroApuesta){
             localTeamName.setText(historial.getNombreLocal());
             awayTeamName.setText(historial.getNombreVisita());

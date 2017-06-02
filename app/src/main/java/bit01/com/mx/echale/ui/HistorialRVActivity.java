@@ -32,7 +32,6 @@ public class HistorialRVActivity extends AppCompatActivity {
     RecyclerView recyclerView;
 
     FirebaseAuth mAuth;
-
     String userUid;
 
     @Override
@@ -71,6 +70,8 @@ public class HistorialRVActivity extends AppCompatActivity {
         return true;
 
     }
+    
+  // Obtener información de apuestas de Firebase
 
     private void traerHistorial() {
 
@@ -107,8 +108,8 @@ public class HistorialRVActivity extends AppCompatActivity {
 
     }
 
+    // Agregar RecyclerView a la vista
     private void settingRecyclerView() {
-
         HistorialAdapter historialAdapter = new HistorialAdapter(mListApuestas);
         recyclerView.setLayoutManager(new LinearLayoutManager(HistorialRVActivity.this));
         recyclerView.setAdapter(historialAdapter);

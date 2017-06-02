@@ -84,6 +84,8 @@ public class Perfil extends AppCompatActivity {
         showData();
     }
 
+
+    // Mostrar la información del usuario en la vista
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -98,7 +100,6 @@ public class Perfil extends AppCompatActivity {
         return true;
 
     }
-
 
     public void showData(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();

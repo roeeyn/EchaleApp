@@ -54,6 +54,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ApuestaActivity extends AppCompatActivity implements IabBroadcastReceiver.IabBroadcastListener{
 
+    // Link de los elementos de la vista a la actividad
     @BindView(R.id.momioLocal)
     TextView tvMomioLocal;
 

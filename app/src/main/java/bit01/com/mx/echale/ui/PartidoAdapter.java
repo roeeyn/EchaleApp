@@ -31,10 +31,12 @@ public class PartidoAdapter extends RecyclerView.Adapter<PartidoAdapter.PartidoV
     private List<Partido> matchList;
     private Context context;
 
+    // PartidoAdpater constructor
     public PartidoAdapter(List<Partido> matchList) {
         this.matchList = matchList;
     }
 
+    // Métodos implementados por RecyclerView.Adapater
     @Override
     public PartidoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
@@ -56,6 +58,7 @@ public class PartidoAdapter extends RecyclerView.Adapter<PartidoAdapter.PartidoV
         return matchList.size();
     }
 
+    // ViewHolder para el RecyclerView de los partidos (Vista principal)
     class PartidoViewHolder extends RecyclerView.ViewHolder{
 
         @BindView(R.id.local_team_image)
@@ -92,6 +95,9 @@ public class PartidoAdapter extends RecyclerView.Adapter<PartidoAdapter.PartidoV
             rootView = itemView;
             ButterKnife.bind(this, itemView);
         }
+
+
+          // Link with the item (item_partido)
 
         public void bindPartido(final Partido partido){
 

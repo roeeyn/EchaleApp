@@ -133,11 +133,14 @@ public class Login extends AppCompatActivity {
         userLogin();
     }
 
+    // Sign in con correo y contraseña
     private void userLogin() {
         // Tomamos el correo
         final String email = inputEmailText.getText().toString().trim();
         // Tomamos el password
         final String password = inputPasswordText.getText().toString().trim();
+
+        // Verificamos si alguno de los campos está vacío
         if( email.isEmpty() ){
             Toast.makeText( Login.this , "El campo correo no puede estar vacío", Toast.LENGTH_LONG).show();
         }else if( password.isEmpty() ){
@@ -272,14 +275,13 @@ public class Login extends AppCompatActivity {
                 });
     }
 
-
+    // Guardar la información en Firebase
     public void saveDataOnFirebase(String name, String email, String photoUrl){
 
+    // Creamos el usuario y como tal lo guardamos
         User user = new User(
                 name, email, "", 300, null, photoUrl
         );
-
-
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users");
