@@ -6,14 +6,17 @@
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_person_black_24dp"
             android:title="Perfil" />
-        <item
-            android:id="@+id/nav_historial"
-            android:icon="@drawable/ic_update_black_24dp"
-            android:title="Historial" />
+
         <item
             android:id="@+id/nav_bet"
             android:icon="@drawable/ic_cards_black_24dp"
-            android:title="Apuestas" />
+            android:title="Apuestas por Jugar" />
+
+        <item
+            android:id="@+id/nav_historial"
+            android:icon="@drawable/ic_update_black_24dp"
+            android:title="Historial de Apuestas" />
+
 
         <item
             android:id="@+id/nav_help"

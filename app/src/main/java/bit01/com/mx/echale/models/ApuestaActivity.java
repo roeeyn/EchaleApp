@@ -1,5 +1,6 @@
 package bit01.com.mx.echale.models;
 
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -114,6 +115,8 @@ public class ApuestaActivity extends AppCompatActivity implements IabBroadcastRe
     int intMontoApuesta;
     String mGananciaProbable;
 
+    String status;
+
     public static final String TAG ="LogVerijas";
 
     boolean terminoMetodoConfirmacionApoostado = false;
@@ -141,6 +144,7 @@ public class ApuestaActivity extends AppCompatActivity implements IabBroadcastRe
     private Menu menu;
 
     boolean guiaYaMostrada = false;
+    boolean yaSeInicio = false;
 
     private List<Partido> mPartidos = new ArrayList<>();
     private long mBolsaTotal, mBolsaLocal, mBolsaEmpate,mBolsaVisita;
@@ -159,7 +163,7 @@ public class ApuestaActivity extends AppCompatActivity implements IabBroadcastRe
 
                     if(dataSnapshot.hasChild(userUid)){
                         yaApostoEmpate= true;
-                        Toast.makeText(ApuestaActivity.this, "soy bien pinshi lento empate", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(ApuestaActivity.this, "soy bien pinshi lento empate", Toast.LENGTH_SHORT).show();
 
 
                     }else{
@@ -186,7 +190,7 @@ public class ApuestaActivity extends AppCompatActivity implements IabBroadcastRe
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                     if(dataSnapshot.hasChild(userUid)){
-                        Toast.makeText(ApuestaActivity.this, "soy bien pinshi lento Local", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(ApuestaActivity.this, "soy bien pinshi lento Local", Toast.LENGTH_SHORT).show();
 
                         yaApostoLocal= true;
 
@@ -215,7 +219,7 @@ public class ApuestaActivity extends AppCompatActivity implements IabBroadcastRe
                     //Toast.makeText(ApuestaActivity.this, "yaaaaa", Toast.LENGTH_SHORT).show();
                     if(dataSnapshot.hasChild(userUid)){
                         yaApostoVisita= true;
-                        Toast.makeText(ApuestaActivity.this, "soy bien pinshi lento visita", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(ApuestaActivity.this, "soy bien pinshi lento visita", Toast.LENGTH_SHORT).show();
                     }else{
                         yaApostoVisita=false;
                     }
@@ -243,7 +247,7 @@ public class ApuestaActivity extends AppCompatActivity implements IabBroadcastRe
         setContentView(R.layout.apuesta_activity);
         ButterKnife.bind(this);
 
-        String base64EncodedPublicKey = "123456";
+        String base64EncodedPublicKey = Constants.TAG_BASED64_KEY;
 
         Log.d("logVerijas", "Creating IAB helper.");
         mHelper = new IabHelper(this, base64EncodedPublicKey);
@@ -260,7 +264,7 @@ public class ApuestaActivity extends AppCompatActivity implements IabBroadcastRe
                 if (!result.isSuccess()) {
                     // Oh noes, there was a problem.
                     Toast.makeText(ApuestaActivity.this, "Problem setting up in-app billing: " + result, Toast.LENGTH_SHORT).show();
-                    //complain("Problem setting up in-app billing: " + result);
+                    complain("Problem setting up in-app billing: " + result);
                     return;
                 }
 
@@ -382,59 +386,155 @@ public class ApuestaActivity extends AppCompatActivity implements IabBroadcastRe
 
             Log.d(TAG, "Query inventory was successful.");
 
-            /*
-             * Check for items we own. Notice that for each purchase, we check
-             * the developer payload to see if it's correct! See
-             * verifyDeveloperPayload().
-             */
-
-            // Do we have the premium upgrade?
-            /*
-            Purchase premiumPurchase = inventory.getPurchase(SKU_PREMIUM);
-            mIsPremium = (premiumPurchase != null && verifyDeveloperPayload(premiumPurchase));
-            Log.d(TAG, "User is " + (mIsPremium ? "PREMIUM" : "NOT PREMIUM"));*/
-
-
-            /*
-            // First find out which subscription is auto renewing
-            Purchase gasMonthly = inventory.getPurchase(SKU_INFINITE_GAS_MONTHLY);
-            Purchase gasYearly = inventory.getPurchase(SKU_INFINITE_GAS_YEARLY);
-            if (gasMonthly != null && gasMonthly.isAutoRenewing()) {
-                mInfiniteGasSku = SKU_INFINITE_GAS_MONTHLY;
-                mAutoRenewEnabled = true;
-            } else if (gasYearly != null && gasYearly.isAutoRenewing()) {
-                mInfiniteGasSku = SKU_INFINITE_GAS_YEARLY;
-                mAutoRenewEnabled = true;
-            } else {
-                mInfiniteGasSku = "";
-                mAutoRenewEnabled = false;
-            }
-
-            // The user is subscribed if either subscription exists, even if neither is auto
-            // renewing
-            mSubscribedToInfiniteGas = (gasMonthly != null && verifyDeveloperPayload(gasMonthly))
-                    || (gasYearly != null && verifyDeveloperPayload(gasYearly));
-            Log.d(TAG, "User " + (mSubscribedToInfiniteGas ? "HAS" : "DOES NOT HAVE")
-                    + " infinite gas subscription.");
-            if (mSubscribedToInfiniteGas) mTank = TANK_MAX;
-
             // Check for gas delivery -- if we own gas, we should fill up the tank immediately
-            Purchase gasPurchase = inventory.getPurchase(SKU_GAS);
+            Purchase gasPurchase = inventory.getPurchase(Constants.SKU_COINS);
             if (gasPurchase != null && verifyDeveloperPayload(gasPurchase)) {
                 Log.d(TAG, "We have gas. Consuming it.");
                 try {
-                    mHelper.consumeAsync(inventory.getPurchase(SKU_GAS), mConsumeFinishedListener);
-                } catch (IabAsyncInProgressException e) {
+                    mHelper.consumeAsync(inventory.getPurchase(Constants.SKU_COINS), mConsumeFinishedListener);
+                } catch (IabHelper.IabAsyncInProgressException e) {
                     complain("Error consuming gas. Another async operation in progress.");
                 }
                 return;
-            }*/
+            }
 
             //updateUi();
             //setWaitScreen(false);
             Log.d(TAG, "Initial inventory query finished; enabling main UI.");
         }
     };
+
+    IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
+        public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
+            Log.d(TAG, "Purchase finished: " + result + ", purchase: " + purchase);
+
+            // if we were disposed of in the meantime, quit.
+            if (mHelper == null) return;
+
+            if (result.isFailure()) {
+                complain("Error purchasing: " + result);
+                return;
+            }
+            if (!verifyDeveloperPayload(purchase)) {
+                complain("Error purchasing. Authenticity verification failed.");
+                return;
+            }
+
+            Log.d(TAG, "Purchase successful.");
+
+            if (purchase.getSku().equals(Constants.SKU_COINS)) {
+                // bought 1/4 tank of gas. So consume it.
+                Log.d(TAG, "Purchase is gas. Starting gas consumption.");
+                try {
+                    mHelper.consumeAsync(purchase, mConsumeFinishedListener);
+                } catch (IabHelper.IabAsyncInProgressException e) {
+                    complain("Error consuming gas. Another async operation in progress.");
+                    return;
+                }
+            }
+        }
+    };
+
+    public void onCoinsButtonClicked(){
+
+        Log.d(TAG, "Buy coins button clicked.");
+
+        // launch the gas purchase UI flow.
+        // We will be notified of completion via mPurchaseFinishedListener
+        Log.d(TAG, "Launching purchase flow for gas.");
+
+        /* TODO: for security, generate your payload here for verification. See the comments on
+         *        verifyDeveloperPayload() for more info. Since this is a SAMPLE, we just use
+         *        an empty string, but on a production app you should carefully generate this. */
+        String payload = "";
+
+        try {
+            mHelper.launchPurchaseFlow(this, Constants.SKU_COINS, Constants.RC_REQUEST_STORE,
+                    mPurchaseFinishedListener, payload);
+        } catch (IabHelper.IabAsyncInProgressException e) {
+            complain("Error launching purchase flow. Another async operation in progress.");
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult(" + requestCode + "," + resultCode + "," + data);
+        if (mHelper == null) return;
+
+        // Pass on the activity result to the helper for handling
+        if (!mHelper.handleActivityResult(requestCode, resultCode, data)) {
+            // not handled, so handle it ourselves (here's where you'd
+            // perform any handling of activity results not related to in-app
+            // billing...
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+        else {
+            Log.d(TAG, "onActivityResult handled by IABUtil.");
+        }
+    }
+
+    // Called when consumption is complete
+    IabHelper.OnConsumeFinishedListener mConsumeFinishedListener = new IabHelper.OnConsumeFinishedListener() {
+        public void onConsumeFinished(Purchase purchase, IabResult result) {
+            Log.d(TAG, "Consumption finished. Purchase: " + purchase + ", result: " + result);
+
+            // if we were disposed of in the meantime, quit.
+            if (mHelper == null) return;
+
+            // We know this is the "gas" sku because it's the only one we consume,
+            // so we don't check which sku was consumed. If you have more than one
+            // sku, you probably should check...
+            if (result.isSuccess()) {
+                // successfully consumed, so we apply the effects of the item in our
+                // game world's logic, which in our case means filling the gas tank a bit
+                Log.d(TAG, "Consumption successful. Provisioning.");
+
+
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("/users/"+userUid+"/monedas");
+                myRef.setValue((long)(monedasActuales+100));
+
+                Toast.makeText(ApuestaActivity.this, "Compraste monedas cawn", Toast.LENGTH_SHORT).show();
+
+                alert("compraste monedas cawn");
+            }
+            else {
+                complain("Error while consuming: " + result);
+            }
+
+            Log.d(TAG, "End consumption flow.");
+        }
+    };
+
+    boolean verifyDeveloperPayload(Purchase p) {
+        String payload = p.getDeveloperPayload();
+
+        /*
+         * TODO: verify that the developer payload of the purchase is correct. It will be
+         * the same one that you sent when initiating the purchase.
+         *
+         * WARNING: Locally generating a random string when starting a purchase and
+         * verifying it here might seem like a good approach, but this will fail in the
+         * case where the user purchases an item on one device and then uses your app on
+         * a different device, because on the other device you will not have access to the
+         * random string you originally generated.
+         *
+         * So a good developer payload has these characteristics:
+         *
+         * 1. If two different users purchase an item, the payload is different between them,
+         *    so that one user's purchase can't be replayed to another user.
+         *
+         * 2. The payload must be such that you can verify it even when the app wasn't the
+         *    one who initiated the purchase flow (so that items purchased by the user on
+         *    one device work on other devices owned by the user).
+         *
+         * Using your own server to store and verify developer payloads across app
+         * installations is recommended.
+         */
+
+        return true;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -444,6 +544,7 @@ public class ApuestaActivity extends AppCompatActivity implements IabBroadcastRe
         MenuItem coinsItem = menu.findItem(R.id.toolbar_coins_indicator);
         coinsItem.setTitle(monedasActuales+"");
 
+        yaSeInicio = true;
         return true;
     }
 
@@ -475,9 +576,11 @@ public class ApuestaActivity extends AppCompatActivity implements IabBroadcastRe
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
 
-                                //TODO agregar in app billings
-                                Toast.makeText(ApuestaActivity.this, "Aceptaste la compra cawn!", Toast.LENGTH_SHORT).show();
                                 sweetAlertDialog.dismiss();
+                                //TODO agregar in app billings
+                                onCoinsButtonClicked();
+                                Toast.makeText(ApuestaActivity.this, "Aceptaste la compra cawn!", Toast.LENGTH_SHORT).show();
+
 
                             }
                         });
@@ -562,8 +665,24 @@ public class ApuestaActivity extends AppCompatActivity implements IabBroadcastRe
                 }
 
                 intMontoApuesta = Integer.parseInt(editable.toString());
-                mGananciaProbable = String.format("%.1f", ((intMontoApuesta/(mtotalEvento+intMontoApuesta))*(mBolsaTotal+intMontoApuesta)));
-                tvPosibleGanancia.setText("$"+mGananciaProbable);
+
+                if(intMontoApuesta>=10000000){
+
+                    pDialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Échale menos!")
+                            .setContentText("Por cuestiones de seguridad la apuesta debe de ser menor a 10M")
+                            .setConfirmText("OK, ¡échale!")
+                            .showCancelButton(false);
+                    pDialog.show();
+
+                    montoApuesta.setText("0");
+
+                }else{
+
+                    mGananciaProbable = String.format("%.1f", ((intMontoApuesta/(mtotalEvento+intMontoApuesta))*(mBolsaTotal+intMontoApuesta)));
+                    tvPosibleGanancia.setText("$"+mGananciaProbable);
+
+                }
 
             }
 
@@ -650,7 +769,7 @@ public class ApuestaActivity extends AppCompatActivity implements IabBroadcastRe
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                Toast.makeText(ApuestaActivity.this, "Partidos actualizados", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ApuestaActivity.this, "Partidos actualizados", Toast.LENGTH_SHORT).show();
 
                 partidos.clear();
 
@@ -675,6 +794,17 @@ public class ApuestaActivity extends AppCompatActivity implements IabBroadcastRe
 
     }
 
+    public void actualizarMonedasMenu(boolean ya){
+
+        if(ya){
+
+            MenuItem coinsItem = menu.findItem(R.id.toolbar_coins_indicator);
+            coinsItem.setTitle(monedasActuales+"");
+
+        }
+
+    }
+
     public void traerDatosUsuario(){
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -687,7 +817,9 @@ public class ApuestaActivity extends AppCompatActivity implements IabBroadcastRe
                 usuarioActual = dataSnapshot.getValue(User.class);
                 monedasActuales = usuarioActual.getMonedas();
 
-                Toast.makeText(ApuestaActivity.this, "Usuario Actualizado", Toast.LENGTH_SHORT).show();
+                actualizarMonedasMenu(yaSeInicio);
+
+                //Toast.makeText(ApuestaActivity.this, "Usuario Actualizado", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -732,7 +864,7 @@ public class ApuestaActivity extends AppCompatActivity implements IabBroadcastRe
                     @Override
                     public void onSequenceFinish() {
 
-                        Toast.makeText(ApuestaActivity.this, "Ahora has tu primer apuesta", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ApuestaActivity.this, "Ahora haz tu primer apuesta", Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -763,6 +895,8 @@ public class ApuestaActivity extends AppCompatActivity implements IabBroadcastRe
 
         Partido partidoActual = partidos.get(calcularIDPartido(partidoID)-1);
 
+        status = partidoActual.getStatus();
+
         Map<String, Object> apuestasPartidoActual = partidoActual.getApuestas();
 
         mBolsaTotal = (long) apuestasPartidoActual.get("bolsaTotalPartido");
@@ -777,10 +911,10 @@ public class ApuestaActivity extends AppCompatActivity implements IabBroadcastRe
         mBolsaVisita = (long) apuestasVista.get("bolsaVisita");
 
 
-        mFloatBolsaEmpate = mBolsaEmpate;
-        mFloatBolsaLocal = mBolsaLocal;
-        mFloatBolsaTotal = mBolsaTotal;
-        mFloatBolsaVisita = mBolsaVisita;
+        mFloatBolsaEmpate = (float) mBolsaEmpate;
+        mFloatBolsaLocal = (float)mBolsaLocal;
+        mFloatBolsaTotal = (float)mBolsaTotal;
+        mFloatBolsaVisita = (float)mBolsaVisita;
 
         tvMomioLocal.setText(String.format("%.1f", ((mFloatBolsaLocal/mFloatBolsaTotal)*100.0))+"%");
         tvMomioEmpate.setText(String.format("%.1f", ((mFloatBolsaEmpate/mFloatBolsaTotal)*100.0))+"%");
@@ -822,16 +956,20 @@ public class ApuestaActivity extends AppCompatActivity implements IabBroadcastRe
         myRef.setValue((long)(mtotalEvento+intMontoApuesta));
 
         myRef = database.getReference("/partidosActuales/partido"+intPartidoId+"/apuestas/bolsaTotalPartido");
-        myRef.setValue(mBolsaTotal+intMontoApuesta);
+        myRef.setValue(mBolsaTotal+(intMontoApuesta));
 
         myRef = database.getReference("/partidosActuales/partido"+intPartidoId+"/apuestas/"+evento+"/"+apostadoresType+"/"+userUid);
-        myRef.setValue(new Apostador(intMontoApuesta));
+        myRef.setValue(new Apostador(intMontoApuesta, userUid));
+
+        /*
+        myRef = database.getReference("/casa/bolsaGanancias/");
+        myRef.setValue(0);*/
 
         myRef = database.getReference("/users/"+userUid+"/monedas");
         myRef.setValue(monedasActuales-intMontoApuesta);
 
-        myRef = database.getReference("/users/"+userUid+"/historial/p"+intPartidoId);
-        myRef.setValue(new Historial(evento, (long)intMontoApuesta, localName.getText().toString(), urlLocal, awayName.getText().toString(), urlVisita, mFechaPartido));
+        myRef = database.getReference("/users/"+userUid+"/apuestasPendientes/p"+intPartidoId);
+        myRef.setValue(new ApuestaPendiente(status,evento, intMontoApuesta, localName.getText().toString(), urlLocal, awayName.getText().toString(), urlVisita, mFechaPartido));
 
     }
 
@@ -954,5 +1092,18 @@ public class ApuestaActivity extends AppCompatActivity implements IabBroadcastRe
     @Override
     public void receivedBroadcast() {
 
+    }
+
+    void alert(String message) {
+        AlertDialog.Builder bld = new AlertDialog.Builder(this);
+        bld.setMessage(message);
+        bld.setNeutralButton("OK", null);
+        Log.d(TAG, "Showing alert dialog: " + message);
+        bld.create().show();
+    }
+
+    void complain(String message) {
+        Log.e(TAG, "**** TrivialDrive Error: " + message);
+        alert("Error: " + message);
     }
 }

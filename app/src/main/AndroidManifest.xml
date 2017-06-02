@@ -4,10 +4,10 @@
     package="bit01.com.mx.echale">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="com.android.vending.BILLING" />
-    
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -34,7 +34,7 @@
         <activity
             android:name=".models.ApuestaActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.Registro"
             android:screenOrientation="portrait" />
@@ -42,7 +42,10 @@
             android:name=".ui.RestorePassword"
             android:screenOrientation="portrait" />
         <activity android:name=".ui.Perfil" />
-        <activity android:name=".ui.HistorialRVActivity"></activity>
+        <activity android:name=".ui.HistorialRVActivity" />
+        <activity android:name=".ui.ApuestasRVActivity" />
+        <activity android:name=".ui.AyudaActivity" />
+        <activity android:name=".ui.ResultadosActivity"></activity>
     </application>
 
 </manifest>

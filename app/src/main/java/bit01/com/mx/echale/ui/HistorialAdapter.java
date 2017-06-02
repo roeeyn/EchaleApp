@@ -75,16 +75,20 @@ public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.Hist
         @BindView(R.id.historial_evento)
         TextView evento;
 
-        @BindView(R.id.historia_apuesta)
+        @BindView(R.id.historial_apuesta)
         TextView apuestaNumero;
 
         @BindView(R.id.historial_monto)
         TextView monto;
 
+        @BindView(R.id.resultadoHistorial)
+        TextView resHistorial;
+
         View rootView;
 
         public HistorialViewHolder(View itemView) {
             super(itemView);
+            rootView = itemView;
             ButterKnife.bind(this, itemView);
         }
 
@@ -93,14 +97,28 @@ public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.Hist
             localTeamName.setText(historial.getNombreLocal());
             awayTeamName.setText(historial.getNombreVisita());
             matchDate.setText(historial.getFecha());
-            evento.setText("Evento: " + historial.getEvento());
+            evento.setText("Apostaste: " + historial.getEvento());
             monto.setText("Monto: " + historial.getMonto());
-            apuestaNumero.setText("Apuesta #" + numeroApuesta);
+            apuestaNumero.setText("Resultado #" + numeroApuesta);
+
+            resHistorial.setText(historial.getResultado());
+
+            switch (resHistorial.getText().toString()){
+
+                case "Ganaste!":
+                    resHistorial.setTextColor(rootView.getResources().getColor(R.color.colorGanaste));
+                    break;
+                case "Échale de nuevo!":
+                    resHistorial.setTextColor(rootView.getResources().getColor(R.color.colorPerdiste));
+                    break;
+
+            }
 
             if (!historial.getUriLocal().isEmpty()) {
 
-                Glide.with(context)
+                Picasso.with(context)
                         .load(historial.getUriLocal())
+                        .resize(80,80)
                         .into(localTeamImage);
 
 
@@ -108,8 +126,9 @@ public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.Hist
 
             if (!historial.getUriVisita().isEmpty()) {
 
-                Glide.with(context)
+                Picasso.with(context)
                         .load(historial.getUriVisita())
+                        .resize(80,80)
                         .into(awayTeamImage);
             }
         }

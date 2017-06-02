@@ -29,20 +29,27 @@ public class Partido {
     private String urlVisita;
     private String hora;
     private String status;
+    private String resultado;
 
-    @Override
-    public String toString() {
-        return "Partido{" +
-                "apuestas=" + apuestas +
-                ", idPartido='" + idPartido + '\'' +
-                ", nombreLocal='" + nombreLocal + '\'' +
-                ", nombreVisita='" + nombreVisita + '\'' +
-                ", fecha='" + fecha + '\'' +
-                ", urlLocal='" + urlLocal + '\'' +
-                ", urlVisita='" + urlVisita + '\'' +
-                ", hora='" + hora + '\'' +
-                ", status='" + status + '\'' +
-                '}';
+    public Partido(Map<String, Object> apuestas, String idPartido, String nombreLocal, String nombreVisita, String fecha, String urlLocal, String urlVisita, String hora, String status, String resultado) {
+        this.apuestas = apuestas;
+        this.idPartido = idPartido;
+        this.nombreLocal = nombreLocal;
+        this.nombreVisita = nombreVisita;
+        this.fecha = fecha;
+        this.urlLocal = urlLocal;
+        this.urlVisita = urlVisita;
+        this.hora = hora;
+        this.status = status;
+        this.resultado = resultado;
+    }
+
+    public String getResultado() {
+        return resultado;
+    }
+
+    public void setResultado(String resultado) {
+        this.resultado = resultado;
     }
 
     public Map<String, Object> getApuestas() {
@@ -111,18 +118,6 @@ public class Partido {
 
     public void setIdPartido(String idPartido) {
         this.idPartido = idPartido;
-    }
-
-    public Partido(Map<String, Object> apuestas, String idPartido, String nombreLocal, String nombreVisita, String fecha, String urlLocal, String urlVisita, String hora, String status) {
-        this.apuestas = apuestas;
-        this.idPartido = idPartido;
-        this.nombreLocal = nombreLocal;
-        this.nombreVisita = nombreVisita;
-        this.fecha = fecha;
-        this.urlLocal = urlLocal;
-        this.urlVisita = urlVisita;
-        this.hora = hora;
-        this.status = status;
     }
 
     public String getStatus() {

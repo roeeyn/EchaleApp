@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -78,9 +79,14 @@ public class PartidoAdapter extends RecyclerView.Adapter<PartidoAdapter.PartidoV
         @BindView(R.id.match_time)
         TextView matchTime;
 
+        @BindView(R.id.layoutPartido)
+        LinearLayout layoutPartido;
+
         String mLocalUrl;
         String mAwayUrl;
         String partidoID;
+        Partido partido;
+        String resultado;
 
         private View rootView;
 
@@ -90,15 +96,35 @@ public class PartidoAdapter extends RecyclerView.Adapter<PartidoAdapter.PartidoV
             ButterKnife.bind(this, itemView);
         }
 
-        // Link with the item (item_partido)
-        public void bindPartido(Partido partido){
+
+          // Link with the item (item_partido)
+
+        public void bindPartido(final Partido partido){
+
             localTeamName.setText(partido.getNombreLocal());
             awayTeamName.setText(partido.getNombreVisita());
             matchDate.setText(partido.getFecha());
             matchTime.setText(partido.getHora());
             mLocalUrl = partido.getUrlLocal();
             mAwayUrl = partido.getUrlVisita();
+            resultado = partido.getResultado();
             partidoID = partido.getIdPartido();
+            this.partido = partido;
+
+            switch(partido.getStatus()){
+
+                case "pendiente":
+                    break;
+                case "jugando":
+                    layoutPartido.setBackgroundColor(rootView.getResources().getColor(R.color.colorJugando));
+                    break;
+                case "finalizado":
+                    layoutPartido.setBackgroundColor(rootView.getResources().getColor(R.color.colorFinalizado));
+
+                    break;
+
+            }
+
             /*
             if(!partido.getLocalTeamImageUrl().isEmpty()) {
                 Glide.with(context)
@@ -130,14 +156,39 @@ public class PartidoAdapter extends RecyclerView.Adapter<PartidoAdapter.PartidoV
                 @Override
                 public void onClick(View v) {
 
-                    Intent intent = new Intent(context, ApuestaActivity.class);
-                    intent.putExtra(Constants.TAG_LOCAL, localTeamName.getText().toString());
-                    intent.putExtra(Constants.TAG_AWAY, awayTeamName.getText().toString());
-                    intent.putExtra(Constants.TAG_LOCAL_IMAGE, mLocalUrl);
-                    intent.putExtra(Constants.TAG_AWAY_IMAGE, mAwayUrl);
-                    intent.putExtra(Constants.TAG_PARTIDO_ID, partidoID);
-                    intent.putExtra(Constants.TAG_DATE, matchDate.getText().toString());
-                    context.startActivity(intent);
+                    Intent intent;
+
+                    switch(partido.getStatus()){
+
+                        case "pendiente":
+
+                        case "jugando":
+                            intent = new Intent(context, ApuestaActivity.class);
+                            intent.putExtra(Constants.TAG_LOCAL, localTeamName.getText().toString());
+                            intent.putExtra(Constants.TAG_AWAY, awayTeamName.getText().toString());
+                            intent.putExtra(Constants.TAG_LOCAL_IMAGE, mLocalUrl);
+                            intent.putExtra(Constants.TAG_AWAY_IMAGE, mAwayUrl);
+                            intent.putExtra(Constants.TAG_PARTIDO_ID, partidoID);
+                            intent.putExtra(Constants.TAG_RESULTADOS, resultado);
+                            intent.putExtra(Constants.TAG_DATE, matchDate.getText().toString());
+                            context.startActivity(intent);
+                            break;
+                        case "finalizado":
+
+                            intent = new Intent(context, ResultadosActivity.class);
+                            intent.putExtra(Constants.TAG_LOCAL, localTeamName.getText().toString());
+                            intent.putExtra(Constants.TAG_AWAY, awayTeamName.getText().toString());
+                            intent.putExtra(Constants.TAG_LOCAL_IMAGE, mLocalUrl);
+                            intent.putExtra(Constants.TAG_AWAY_IMAGE, mAwayUrl);
+                            intent.putExtra(Constants.TAG_PARTIDO_ID, partidoID);
+                            intent.putExtra(Constants.TAG_RESULTADOS, resultado);
+                            intent.putExtra(Constants.TAG_DATE, matchDate.getText().toString());
+                            context.startActivity(intent);
+                            break;
+
+                    }
+
+
 
                 }
             });

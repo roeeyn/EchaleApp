@@ -10,5 +10,9 @@
     <color name="colorIcons">#FFFFFF</color>
     <color name="colorDivider">#BDBDBD</color>
     <color name="colorTransparente">#00ffffff</color>
+    <color name="colorJugando">#56d9e6</color>
+    <color name="colorFinalizado">#72eb7e</color>
+    <color name="colorPerdiste">#9EA29B</color>
+    <color name="colorGanaste">#b0c493</color>
 
 </resources>
