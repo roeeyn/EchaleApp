@@ -7,14 +7,11 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Display;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -27,11 +24,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -47,13 +42,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bit01.com.mx.echale.R;
-import bit01.com.mx.echale.models.ApuestaActivity;
 import bit01.com.mx.echale.models.Partido;
 import bit01.com.mx.echale.models.User;
 import bit01.com.mx.echale.utils.Constants;
-import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class PartidosRecyclerViewActvity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -111,12 +103,12 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
         mAuth = FirebaseAuth.getInstance();
         userUid = mAuth.getCurrentUser().getUid();
 
-
+        traerDatosUsuario();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setTitle("Lista de Partidos");
+        getSupportActionBar().setTitle("Partidos a Jugar");
 
         traerPartidos();
 
@@ -231,14 +223,41 @@ public class PartidosRecyclerViewActvity extends AppCompatActivity
         if (id == R.id.nav_profile) {
             startActivity(new Intent(PartidosRecyclerViewActvity.this, Perfil.class));
         } else if (id == R.id.nav_bet) {
-            startActivity(new Intent(PartidosRecyclerViewActvity.this, HistorialRVActivity.class));
+            startActivity(new Intent(PartidosRecyclerViewActvity.this, ApuestasRVActivity.class));
         } else if (id == R.id.nav_help) {
-
+            startActivity(new Intent(PartidosRecyclerViewActvity.this, AyudaActivity.class));
+        } else if(id == R.id.nav_historial){
+            startActivity(new Intent(PartidosRecyclerViewActvity.this, HistorialRVActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void traerDatosUsuario(){
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("/users/"+userUid);
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                usuarioActual = dataSnapshot.getValue(User.class);
+                monedasActuales = usuarioActual.getMonedas();
+
+                //actualizarMonedasMenu(yaSeInicio);
+
+                //Toast.makeText(ApuestaActivity.this, "Usuario Actualizado", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
 

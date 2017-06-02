@@ -19,26 +19,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bit01.com.mx.echale.R;
+import bit01.com.mx.echale.models.ApuestaActivity;
+import bit01.com.mx.echale.models.ApuestaPendiente;
 import bit01.com.mx.echale.models.Historial;
-import bit01.com.mx.echale.models.Partido;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HistorialRVActivity extends AppCompatActivity {
+public class ApuestasRVActivity extends AppCompatActivity {
 
-    List<Historial> mListApuestas = new ArrayList<>();
+    List<ApuestaPendiente> mListApuestas = new ArrayList<>();
 
-    @BindView(R.id.rvHistorial)
+    @BindView(R.id.rvApuestasPendientes)
     RecyclerView recyclerView;
 
     FirebaseAuth mAuth;
 
     String userUid;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_historial_rv);
+        setContentView(R.layout.activity_apuestas_rv);
 
         // Inicializamos ButterKnife
         ButterKnife.bind(this);
@@ -46,14 +48,14 @@ public class HistorialRVActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle("Historial de Apuestas");
+            actionBar.setTitle("Apuestas por Jugar");
         }
 
 
         mAuth = FirebaseAuth.getInstance();
         userUid = mAuth.getCurrentUser().getUid();
 
-        traerHistorial();
+        traerApuestasPendientes();
 
     }
 
@@ -63,7 +65,7 @@ public class HistorialRVActivity extends AppCompatActivity {
         switch (item.getItemId()){
 
             case android.R.id.home:
-                startActivity(new Intent(HistorialRVActivity.this, PartidosRecyclerViewActvity.class));
+                startActivity(new Intent(ApuestasRVActivity.this, PartidosRecyclerViewActvity.class));
                 break;
 
         }
@@ -72,12 +74,12 @@ public class HistorialRVActivity extends AppCompatActivity {
 
     }
 
-    private void traerHistorial() {
+    private void traerApuestasPendientes() {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("/users/" + userUid + "/historial/");
+        DatabaseReference myRef = database.getReference("/users/" + userUid + "/apuestasPendientes/");
 
-        final List<Historial> partidosApostados = new ArrayList<>();
+        final List<ApuestaPendiente> partidosApostados = new ArrayList<>();
 
 
         myRef.addValueEventListener(new ValueEventListener() {
@@ -89,7 +91,7 @@ public class HistorialRVActivity extends AppCompatActivity {
                 Iterable<DataSnapshot> children = dataSnapshot.getChildren();
                 if(!children.equals(null)) {
                     for (DataSnapshot child : children) {
-                        partidosApostados.add(child.getValue(Historial.class));
+                        partidosApostados.add(child.getValue(ApuestaPendiente.class));
                     }
 
                     mListApuestas = partidosApostados;
@@ -109,13 +111,9 @@ public class HistorialRVActivity extends AppCompatActivity {
 
     private void settingRecyclerView() {
 
-        HistorialAdapter historialAdapter = new HistorialAdapter(mListApuestas);
-        recyclerView.setLayoutManager(new LinearLayoutManager(HistorialRVActivity.this));
-        recyclerView.setAdapter(historialAdapter);
-
+        ApuestasAdapter apuestasAdapter = new ApuestasAdapter(mListApuestas);
+        recyclerView.setLayoutManager(new LinearLayoutManager(ApuestasRVActivity.this));
+        recyclerView.setAdapter(apuestasAdapter);
     }
 
-
 }
-
-

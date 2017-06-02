@@ -1,43 +1,21 @@
 package bit01.com.mx.echale.models;
 
-import java.util.List;
-
 /**
- * Created by ericklara on 27/05/17.
+ * Created by roeeyn on 1/06/17.
  */
 
-public class Historial {
+public class ApuestaPendiente {
 
+    private String status;
     private String evento;
-    private long monto;
+    private double monto;
     private String nombreLocal;
     private String uriLocal;
     private String nombreVisita;
     private String uriVisita;
     private String fecha;
-    private String resultado;
 
-    public Historial() {
-        // Default constructor
-    }
-
-    public Historial(String evento, long monto, String nombreLocal, String uriLocal, String nombreVisita, String uriVisita, String fecha,String resultado) {
-        this.evento = evento;
-        this.monto = monto;
-        this.nombreLocal = nombreLocal;
-        this.uriLocal = uriLocal;
-        this.nombreVisita = nombreVisita;
-        this.uriVisita = uriVisita;
-        this.fecha = fecha;
-        this.resultado = resultado;
-    }
-
-    public String getResultado() {
-        return resultado;
-    }
-
-    public void setResultado(String resultado) {
-        this.resultado = resultado;
+    public ApuestaPendiente() {
     }
 
     public String getEvento() {
@@ -48,11 +26,11 @@ public class Historial {
         this.evento = evento;
     }
 
-    public long getMonto() {
+    public double getMonto() {
         return monto;
     }
 
-    public void setMonto(long monto) {
+    public void setMonto(double monto) {
         this.monto = monto;
     }
 
@@ -93,6 +71,25 @@ public class Historial {
     }
 
     public void setFecha(String fecha) {
+        this.fecha = fecha;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public ApuestaPendiente(String status, String evento, double monto, String nombreLocal, String uriLocal, String nombreVisita, String uriVisita, String fecha) {
+        this.status = status;
+        this.evento = evento;
+        this.monto = monto;
+        this.nombreLocal = nombreLocal;
+        this.uriLocal = uriLocal;
+        this.nombreVisita = nombreVisita;
+        this.uriVisita = uriVisita;
         this.fecha = fecha;
     }
 }

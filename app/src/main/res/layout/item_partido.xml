@@ -22,39 +22,36 @@
             >
             <!-- Parte de arribo -->
             <LinearLayout
+                android:id="@+id/layoutPartido"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:orientation="horizontal"
                 android:background="#e7e7e7"
-                android:padding="8dp"
-                >
+                android:orientation="horizontal"
+                android:padding="8dp">
 
                 <!-- Equipo A -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/local_team_image"
-                        android:src="@drawable/soccer_ball"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="7"
-                        app:civ_border_width="0dp"
-                        app:civ_border_color="#000"/>
+                        android:src="@drawable/soccer_ball"
+                        app:civ_border_color="#000"
+                        app:civ_border_width="0dp" />
 
                     <TextView
                         android:id="@+id/local_team_name"
                         android:layout_width="match_parent"
-                        android:text="Equipo_A"
-                        android:textAlignment="center"
                         android:layout_height="0dp"
                         android:layout_weight="3"
-                        />
+                        android:text="Equipo_A"
+                        android:textAlignment="center" />
 
                 </LinearLayout>
 
@@ -62,40 +59,36 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:padding="2dp"
                     android:layout_gravity="center"
-                    android:textSize="20sp"
-                    android:text="VS"
+                    android:layout_weight="2"
                     android:gravity="center"
-                    />
+                    android:padding="2dp"
+                    android:text="VS"
+                    android:textSize="20sp" />
 
                 <!-- Equipo B -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:src="@drawable/soccer_ball"
+                    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/away_team_image"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="7"
-                        app:civ_border_width="0dp"
-                        app:civ_border_color="#000"/>
+                        android:src="@drawable/soccer_ball"
+                        app:civ_border_color="#000"
+                        app:civ_border_width="0dp" />
 
                     <TextView
                         android:id="@+id/away_team_name"
                         android:layout_width="match_parent"
-                        android:text="Equipo_b"
-                        android:textAlignment="center"
                         android:layout_height="0dp"
                         android:layout_weight="3"
-                        />
+                        android:text="Equipo_b"
+                        android:textAlignment="center" />
 
                 </LinearLayout>
             </LinearLayout>

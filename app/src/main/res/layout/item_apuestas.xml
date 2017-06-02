@@ -39,7 +39,7 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/historial_local_team_image"
+                        android:id="@+id/apuestas_local_team_image"
                         android:src="@drawable/soccer_ball"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
@@ -48,7 +48,7 @@
                         app:civ_border_color="#000"/>
 
                     <TextView
-                        android:id="@+id/historial_local_team_name"
+                        android:id="@+id/apuestas_local_team_name"
                         android:layout_width="match_parent"
                         android:text="Equipo_A"
                         android:textAlignment="center"
@@ -67,14 +67,14 @@
                     >
 
                     <TextView
-                        android:id="@+id/historial_apuesta"
+                        android:id="@+id/apuestas_apuesta"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="2"
                         android:padding="2dp"
                         android:layout_gravity="center"
                         android:textSize="16sp"
-                        android:text="Resultado"
+                        android:text="Apuesta"
                         android:gravity="center"
                         />
                     <TextView
@@ -101,7 +101,7 @@
                     <de.hdodenhof.circleimageview.CircleImageView
                         xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:src="@drawable/soccer_ball"
-                        android:id="@+id/historial_away_team_image"
+                        android:id="@+id/apuestas_away_team_image"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="7"
@@ -109,7 +109,7 @@
                         app:civ_border_color="#000"/>
 
                     <TextView
-                        android:id="@+id/historial_away_team_name"
+                        android:id="@+id/apuestas_away_team_name"
                         android:layout_width="match_parent"
                         android:text="Equipo_b"
                         android:textAlignment="center"
@@ -120,13 +120,23 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <!-- Descripción -->
+            <!--<TextView-->
+            <!--android:id="@+id/item_promo_tv_descripcion"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="110dp"-->
+            <!--android:padding="8dp"-->
+            <!--android:maxLines="5"-->
+            <!--android:textSize="13sp"-->
+            <!--/>-->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 >
                 <TextView
-                    android:id="@+id/historial_match_date"
+                    android:id="@+id/apuestas_match_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
@@ -141,43 +151,27 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_marginBottom="15dp">
-                    <TextView
-                        android:id="@+id/historial_evento"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Apostaste: "
-                        android:textAlignment="center"
-                        />
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        />
-                    <TextView
-                        android:id="@+id/historial_monto"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Monto: "
-                        android:textAlignment="center"
-                        />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="20dp">
-
-                    <TextView
-                        android:textSize="25sp"
-                        android:id="@+id/resultadoHistorial"
-                        android:gravity="center_horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Ganaste!"/>
-
+                        <TextView
+                            android:id="@+id/apuestas_evento"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Apostaste: "
+                            android:textAlignment="center"
+                            />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            />
+                        <TextView
+                            android:id="@+id/apuestas_monto"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Monto: "
+                            android:textAlignment="center"
+                            />
                 </LinearLayout>
 
             </LinearLayout>
